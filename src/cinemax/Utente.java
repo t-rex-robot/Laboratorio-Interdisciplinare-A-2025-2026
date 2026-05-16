@@ -50,6 +50,17 @@ public class Utente {
 		return this.ruolo;
 	}
 	
+	//controlla che nei dati inseriti dall'utente non ci sia la virgola, perchè è il separatore che usiamo nei file csv
+	//da usare nel main credo
+	public boolean controlloDati(String p) {
+		p.trim();
+		for (int i=0; i<p.length(); i++)
+			if(p.charAt(i) == ',')
+				return false;
+		return true;		
+	}
+	
+	//scrive l'oggetto Utente già in formato corretto per il file utenti.csv
 	public String toCSV() {
 		return this.nome + "," + this.cognome + "," + this.username + "," + this.password + "," + this.datadinascita + "," + this.domicilio + "," + this.ruolo;
 	}
