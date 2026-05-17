@@ -1,5 +1,6 @@
 package cinemax;
 import java.io.*;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -32,22 +33,52 @@ public class GestioneUtenti {
 	}
 	
 	//nel primo if controlla se effettivamente lo username sia di un Utente già esistente e, in caso positivo, controlla che la password associata allo username sia quella corretta
-	public boolean login(String username, String p) {	
-		if(mappaUtenti.containsKey(username)) {
-			if(mappaUtenti.get(username).getPassword()==(p)) {
+	public boolean login(String username, String p) {
+		if (mappaUtenti.containsKey(username)) {
+			if (mappaUtenti.get(username).getPassword() == (p)) {
 				System.out.println("login effettuato correttamente!");
 				utenteCorrente = mappaUtenti.get(username);
 				return true;
-			}else {
+			} else {
 				System.out.println("Username o Password errati!");
 				return false;
 			}
 		}
 		System.out.println("Utente non registrato!");
 		return false;
-					
 	}
-	
+
+	// login con hash della password (roba che ho aggiunto io -Elisa-)
+	public boolean loginHashed(String username, String p) {
+		if (mappaUtenti.containsKey(username)) {
+			try {
+				if (passwordMatches(username, p)) {
+					System.out.println("login effettuato correttamente!");
+					utenteCorrente = mappaUtenti.get(username);
+					return true;
+				}
+			} catch (NoSuchAlgorithmException e) {
+				System.err.println("Errore hashing password: " + e.getMessage());
+				return false;
+			}
+			System.out.println("Username o Password errati!");
+			return false;
+		}
+		System.out.println("Utente non registrato!");
+		return false;
+	}
+
+	// roba che ho aggiunto io: 
+	// controlla se la password inserita corrisponde a quella memorizzata, confrontando l'hash della password inserita con l'hash memorizzato (o con la password in chiaro, per compatibilità con i dati già presenti nel file)
+	public boolean passwordMatches(String username, String plainPassword) throws NoSuchAlgorithmException {
+		if (!mappaUtenti.containsKey(username)) {
+			return false;
+		}
+		String storedPassword = mappaUtenti.get(username).getPassword();
+		String hashedInput = PasswordEncryption.hashPassword(plainPassword);
+		return storedPassword.equals(hashedInput) || storedPassword.equals(plainPassword);
+	}
+
 	//non sono ancora sicura che utenteCorrente ci serva
 	public boolean logout() {
 		utenteCorrente = null;
