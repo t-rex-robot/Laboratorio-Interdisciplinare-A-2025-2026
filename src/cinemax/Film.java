@@ -99,6 +99,8 @@ public class Film {
         return false;
     }
     
+  //scrive l'oggetto Film già in formato corretto per il file utenti.csv
+    
     public String toCSV() {
         return titolo + "," + genere + "," + regista + "," + anno + "," + durata + "," + etaMinima + "," + data + "," + ora + "," + costoBiglietto + "," + postiSala;
     }
