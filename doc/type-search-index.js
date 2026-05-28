@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html","k":"18"},{"p":"cinemax","l":"FormatoDatiNonValidoException","k":"13"},{"p":"cinemax","l":"GestioneUtenti"},{"p":"cinemax","l":"PasswordHasher"},{"p":"cinemax","l":"Ruolo","k":"9"},{"p":"cinemax","l":"Utente"}];updateSearchResults();
