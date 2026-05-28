@@ -4,17 +4,32 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.*;
 
+/**
+ * Gestisce il caricamento, l'autenticazione e la registrazione degli utenti.
+ * Legge gli utenti da un file CSV e mantiene in memoria una mappa username->Utente.
+ *
+ * @see cinemax.Utente
+ * @see cinemax.PasswordHasher
+ */
 public class GestioneUtenti {
 	
-	private Map<String, Utente> mappaUtenti;
+	private final Map<String, Utente> mappaUtenti;
 	private final String PATH = "data/utenti.csv";
 	private Utente utenteCorrente;
 	
+	/**
+	 * Costruisce un gestore utenti e inizializza la mappa degli utenti.
+	 */
 	public GestioneUtenti() {
 		mappaUtenti = new HashMap<>();
 		utenteCorrente=null;
 	}
-	//all'avvio del programma carica tutti gli utenti scritti nel file utenti.csv in una hash map, creando direttamente gli oggetti Utente
+	
+	/**
+	 * All'avvio del programma carica gli utenti dal file CSV nella hash map.
+	 *
+	 * @throws FormatoDatiNonValidoException se una riga del file non ha il formato corretto
+	 */
 	public void caricaUtentiDaFile() throws FormatoDatiNonValidoException {
 		try (BufferedReader br = new BufferedReader(new FileReader(PATH))){
 			String riga;
@@ -31,24 +46,15 @@ public class GestioneUtenti {
 			//System.err.println("Errore nel formato dei dati: " + e.getMessage());
 		//}
 	}
-	
-	//nel primo if controlla se effettivamente lo username sia di un Utente già esistente e, in caso positivo, controlla che la password associata allo username sia quella corretta
-	public boolean login(String username, String p) {
-		if (mappaUtenti.containsKey(username)) {
-			if (mappaUtenti.get(username).getPassword() == (p)) {
-				System.out.println("login effettuato correttamente!");
-				utenteCorrente = mappaUtenti.get(username);
-				return true;
-			} else {
-				System.out.println("Username o Password errati!");
-				return false;
-			}
-		}
-		System.out.println("Utente non registrato!");
-		return false;
-	}
 
-	// login con hash della password (roba che ho aggiunto io -Elisa-)
+	/**
+	 * Esegue il login confrontando la password inserita con l'hash SHA-256.
+	 * Mantiene compatibilità con le password in chiaro già presenti nei dati.
+	 *
+	 * @param username lo username dell'utente
+	 * @param p la password in chiaro da verificare
+	 * @return true se il login è riuscito, false altrimenti
+	 */
 	public boolean loginHashed(String username, String p) {
 		if (mappaUtenti.containsKey(username)) {
 			try {
@@ -68,24 +74,46 @@ public class GestioneUtenti {
 		return false;
 	}
 
-	// roba che ho aggiunto io: 
-	// controlla se la password inserita corrisponde a quella memorizzata, confrontando l'hash della password inserita con l'hash memorizzato (o con la password in chiaro, per compatibilità con i dati già presenti nel file)
+	/**
+	 * Controlla se la password in chiaro corrisponde a quella memorizzata.
+	 * Se la password memorizzata è un hash SHA-256, confronta l'hash calcolato;
+	 * altrimenti confronta direttamente la password in chiaro per compatibilità.
+	 *
+	 * @param username lo username dell'utente
+	 * @param plainPassword la password in chiaro inserita
+	 * @return true se la password corrisponde, false altrimenti
+	 * @throws NoSuchAlgorithmException se l'algoritmo SHA-256 non è disponibile
+	 */
 	public boolean passwordMatches(String username, String plainPassword) throws NoSuchAlgorithmException {
 		if (!mappaUtenti.containsKey(username)) {
 			return false;
 		}
 		String storedPassword = mappaUtenti.get(username).getPassword();
-		String hashedInput = PasswordEncryption.hashPassword(plainPassword);
+		String hashedInput = PasswordHasher.hashPassword(plainPassword);
 		return storedPassword.equals(hashedInput) || storedPassword.equals(plainPassword);
 	}
 
-	//non sono ancora sicura che utenteCorrente ci serva
+	/**
+	 * Esegue il logout cancellando l'utente corrente.
+	 *
+	 * @return true se l'operazione è stata completata
+	 */
 	public boolean logout() {
 		utenteCorrente = null;
 		return true;
 	}
 	
-	//crea un cliente con i valori passati per parametri, lo salva nella hash map e lo scrive nel file utenti.csv
+	/**
+	 * Registra un nuovo cliente e lo aggiunge sia nella hash map sia sul file CSV.
+	 *
+	 * @param n nome del cliente
+	 * @param c cognome del cliente
+	 * @param us username scelto dal cliente
+	 * @param p password in chiaro
+	 * @param dn data di nascita del cliente
+	 * @param d domicilio del cliente
+	 * @return true se la registrazione ha avuto successo, false altrimenti
+	 */
 	public boolean registraCliente(String n, String c, String us, String p, LocalDate dn, String d) {
 		if (!mappaUtenti.containsKey(us)) {
 			System.out.print("Username non disponibile! ");
@@ -106,7 +134,9 @@ public class GestioneUtenti {
 		return true;
 	}
 	
-	//stampa tutti i valori all'interno della hash map, quindi tutti gli utenti salvati nel file
+	/**
+	 * Stampa tutti gli utenti attualmente caricati nella mappa.
+	 */
 	public void stampaMappa() {
 		for (Utente u : mappaUtenti.values()) {
 			System.out.println(u);

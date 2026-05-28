@@ -5,8 +5,28 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
 
-public class PasswordEncryption {
+/**
+ * Fornisce utilità per generare hash SHA-256 di password in chiaro.
+ * Usa SHA-256 per ottenere una rappresentazione esadecimale sicura della password.
+ * Si tratta di hashing unidirezionale, non di crittografia reversibile.
+ *
+ * @see java.security.MessageDigest
+ */
+public class PasswordHasher {
 
+    /**
+     * Costruttore privato per impedire l'instanziazione della classe di utilità.
+     */
+    private PasswordHasher() {
+    }
+
+    /**
+     * Calcola l'hash SHA-256 della password in chiaro.
+     *
+     * @param password la password da hashare
+     * @return l'hash esadecimale della password
+     * @throws NoSuchAlgorithmException se l'algoritmo SHA-256 non è disponibile
+     */
     public static String hashPassword(String password) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] hash = md.digest(password.getBytes());
@@ -19,6 +39,12 @@ public class PasswordEncryption {
         return sb.toString();
     }
 
+    /**
+     * Punto di ingresso per testare la generazione dell'hash e la verifica delle password.
+     *
+     * @param args argomenti della linea di comando (non usati)
+     * @throws NoSuchAlgorithmException se l'algoritmo SHA-256 non è disponibile
+     */
     public static void main(String[] args) throws NoSuchAlgorithmException {
 
         GestioneUtenti mappaU = new GestioneUtenti();
@@ -27,13 +53,12 @@ public class PasswordEncryption {
 
         // Test di verifica password usando hash
         Scanner sc = new Scanner(System.in);
-        String username = "inserisci_username"; // sostituisci con uno username esistente nel file utenti.csv
-        System.out.println("Inserisci username:");
-        username = sc.nextLine();
 
-        String enteredPassword = "inserisci_password"; // sostituisci con la password da verificare
-        System.out.println("Inserisci password:");
-        enteredPassword = sc.nextLine();
+        System.out.println("Inserisci username:"); //inserisci uno username esistente nel file utenti.csv
+        String username = sc.nextLine();
+
+        System.out.println("Inserisci password:"); //inserisci la password da verificare
+        String enteredPassword = sc.nextLine();
 
         System.out.println("\nVerifica password per utente: " + username);
         boolean passwordOK = mappaU.loginHashed(username, enteredPassword);
@@ -57,7 +82,7 @@ public class PasswordEncryption {
             System.out.println("\nPassword errata!");
         }
 
-        
+        sc.close();
     }
 }
 
