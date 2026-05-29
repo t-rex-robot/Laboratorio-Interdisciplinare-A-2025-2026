@@ -34,7 +34,7 @@ public class Prenotazione {
         return codicePrenotazione;
     }
 
-    public String getUsernameUtente() {
+    public String getUsername() {
         return usernameUtente;
     }
 

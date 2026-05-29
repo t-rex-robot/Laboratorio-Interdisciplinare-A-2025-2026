@@ -1,5 +1,8 @@
 package cinemax;
 import java.io.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.*;
 import java.util.UUID;
 
 public class GestionePrenotazioni {
@@ -86,7 +89,7 @@ public class GestionePrenotazioni {
     
     private String generaCodicePrenotazione() {
 
-    	String codice = UUID.randomUUID().toString();
+    	return UUID.randomUUID().toString();
     }
     
     //Creazione delle prenotazioni
