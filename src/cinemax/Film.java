@@ -14,6 +14,7 @@ public class Film {
     private int etaMinima;
     private double costoBiglietto;
     private int postiSala;
+    private String chiave;
     
     //capienza massima in sala
     public static final int capienza_max = 200;
@@ -31,7 +32,16 @@ public class Film {
     this.etaMinima = etaMinima;
     this.costoBiglietto = costoBiglietto;
     this.postiSala = capienza_max;
+    this.chiave = data.toString()+ora.toString();
 }
+   public void setData(LocalDate d) {
+	   this.data = d;
+   }
+   
+   public void setOra(LocalTime o) {
+	   this.ora = o;
+   }
+    
     //Metodi getter film
     
     public LocalDate getData() {
@@ -68,6 +78,10 @@ public class Film {
 
     public double getCostoBiglietto() {
         return costoBiglietto;
+    }
+    
+    public String getChiave() {
+    	return this.chiave;
     }
     
     public int getPostiSala() {

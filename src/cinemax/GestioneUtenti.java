@@ -115,7 +115,7 @@ public class GestioneUtenti {
 	 * @return true se la registrazione ha avuto successo, false altrimenti
 	 */
 	public boolean registraCliente(String n, String c, String us, String p, LocalDate dn, String d) {
-		if (!mappaUtenti.containsKey(us)) {
+		if (mappaUtenti.containsKey(us)) {
 			System.out.print("Username non disponibile! ");
 			return false;
 		}
