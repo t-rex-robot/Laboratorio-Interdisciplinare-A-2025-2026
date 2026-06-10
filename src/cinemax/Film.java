@@ -2,6 +2,10 @@ package cinemax;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+/**
+ * Rappresenta un film programmato in sala, con informazioni di programmazione,
+ * dettagli di produzione, limiti di età e disponibilità dei posti.
+ */
 public class Film {
 	//Attributi del film
 	private LocalDate data;
@@ -19,7 +23,19 @@ public class Film {
     //capienza massima in sala
     public static final int capienza_max = 200;
     
-    //costruttore del film
+    /**
+     * Costruisce un nuovo oggetto Film con le informazioni principali.
+     *
+     * @param data data della proiezione
+     * @param ora orario della proiezione
+     * @param titolo titolo del film
+     * @param genere genere del film
+     * @param regista regista del film
+     * @param anno anno di produzione del film
+     * @param durata durata in minuti del film
+     * @param etaMinima età minima consentita per la visione
+     * @param costoBiglietto costo del biglietto per la proiezione
+     */
     public Film(LocalDate data, LocalTime ora, String titolo, String genere, String regista, int anno, int durata, int etaMinima,  double costoBiglietto) {
     
     this.data = data;
@@ -80,6 +96,11 @@ public class Film {
         return costoBiglietto;
     }
     
+    /**
+     * Restituisce la chiave univoca del film, costruita da data e ora.
+     *
+     * @return chiave univoca della proiezione
+     */
     public String getChiave() {
     	return this.chiave;
     }
@@ -88,7 +109,12 @@ public class Film {
         return postiSala;
     }
     
-    //Dato un numero di posti prenotatio cancellazioni di prenotazioni il metodo modifica la capienza della sala del film scelto
+    /**
+     * Riduce il numero di posti disponibili in sala quando vengono prenotati biglietti.
+     *
+     * @param numero numero di posti da rimuovere
+     * @return true se l'operazione ha avuto successo, false se il numero non è valido o non ci sono abbastanza posti
+     */
     public boolean eliminaPosti(int numero) {
 
         if (numero <= 0) return false;
@@ -115,6 +141,11 @@ public class Film {
     
   //scrive l'oggetto Film già in formato corretto per il file utenti.csv
     
+    /**
+     * Restituisce la rappresentazione CSV del film.
+     *
+     * @return stringa CSV con i campi del film
+     */
     public String toCSV() {
         return titolo + "," + genere + "," + regista + "," + anno + "," + durata + "," + etaMinima + "," + data + "," + ora + "," + costoBiglietto + "," + postiSala;
     }
