@@ -12,9 +12,14 @@ public class GestionePrenotazioni {
 
     // percorso file CSV
     private final String PATH = "data/prenotazioni.csv";
-
-    // costruttore
-    public GestionePrenotazioni() {
+    
+ // riferimento a i Film
+    private GestioneFilm gestioneFilm;
+    
+ // Costruttore Principale
+ // obbliga il collegamento con GestioneFilm per evitare errori
+    public GestionePrenotazioni(GestioneFilm gestioneFilm) {
+        this.gestioneFilm = gestioneFilm; // collegamento obbligatorio
         mappaPrenotazioni = new HashMap<>();
     }
     
@@ -254,8 +259,8 @@ public class GestionePrenotazioni {
             return false;
         }
 
-        // recupero film (manca modo di trovarlo)
-        Film film = trovaFilm(p.getTitoloFilm(), p.getDataProiezione(), p.getOraProiezione());
+        // recupero film
+        Film film = gestioneFilm.trovaProiezione( p.getTitoloFilm(), p.getDataProiezione(), p.getOraProiezione());
 
         if (film != null) {
             film.aggiungiPosti(p.getNumeroBiglietti());
@@ -287,7 +292,7 @@ public class GestionePrenotazioni {
             return false;
         }
 
-        Film film = trovaFilm(p.getTitoloFilm(), p.getDataProiezione(), p.getOraProiezione());
+        Film film = gestioneFilm.trovaProiezione( p.getTitoloFilm(), p.getDataProiezione(), p.getOraProiezione());
 
         if (film == null) {
             System.out.println("Film non trovato");
@@ -323,5 +328,22 @@ public class GestionePrenotazioni {
 
         System.out.println("Prenotazione modificata con successo");
         return true;
+    }
+    
+    //Metodo che restituisce le prenotazioni di oggi
+    public List<Prenotazione> prenotazioniOggi() {
+
+        List<Prenotazione> risultato = new ArrayList<>();
+
+        LocalDate oggi = LocalDate.now();
+
+        for (Prenotazione p : mappaPrenotazioni.values()) {
+
+            if (p.getDataProiezione().isEqual(oggi)) {
+                risultato.add(p);
+            }
+        }
+
+        return risultato;
     }
 }
