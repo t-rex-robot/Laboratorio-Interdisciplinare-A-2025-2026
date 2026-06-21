@@ -5,6 +5,9 @@ import java.util.*;
 import java.io.*;
 
 public class GestioneFilm {
+	public enum Criterio{
+		COMPRESO_TRA, PRIMA_DI, DOPO_DI;
+	}
 	private Map<String, Film> mappaFilm;
 	private final String PATH="data/film.csv";
 	
@@ -102,22 +105,70 @@ public class GestioneFilm {
 		return l;
 	}
 	
-	public LinkedList<Film> trovaPerDate(LocalDate inizio, LocalDate fine){
+	public LinkedList<Film> trovaPerDate(Criterio crit, LocalDate data1, LocalDate data2){
 		LinkedList<Film> l = new LinkedList<Film>();
-		for (Film f : mappaFilm.values()) {
-			if((f.getData().equals(inizio) || inizio.isBefore(f.getData())) && (f.getData().equals(fine) || fine.isAfter(f.getData())))
-				l.add(f);
+		switch(crit) {
+		case COMPRESO_TRA:
+			if(data2.isBefore(data1)) throw new FormatoDatiNonValidoException("Date non valide");
+			for (Film f : mappaFilm.values()) {
+				if((f.getData().equals(data1) || data1.isBefore(f.getData())) && (f.getData().equals(data2) || data2.isAfter(f.getData())))
+					l.add(f);
+			}
+			return l;
+		
+		//nei casi di PRIMA_DI e DOPO_DI la seconda data è messa a null
+		case PRIMA_DI: 
+			for (Film f : mappaFilm.values()) {
+				if (f.getData().isBefore(data1))
+					l.add(f);
+			}
+			return l;
+			
+		case DOPO_DI:
+			for (Film f : mappaFilm.values()) {
+				if(f.getData().isAfter(data1))
+					l.add(f);
+			}
+			return l;
+			
+		default:
+			System.out.println("Ricerca non valida");
+			return l;	
 		}
-		return l;
 	}
 	
-	public LinkedList<Film> trovaPerCosto(double min, double max){
+	public LinkedList<Film> trovaPerCosto(Criterio crit, double costo1, double costo2){
 		LinkedList<Film> l = new LinkedList<Film>();
-		for (Film f : mappaFilm.values()) {
-			if(f.getCostoBiglietto()>=min && f.getCostoBiglietto()<=max)
-				l.add(f);
+		if(costo1<0) throw new FormatoDatiNonValidoException("Non esistono costi negativi");
+		
+		switch(crit) {
+		case COMPRESO_TRA:
+			if (costo1>costo2) throw new FormatoDatiNonValidoException("Valori non validi");
+			for (Film f : mappaFilm.values()) {
+				if(f.getCostoBiglietto()>=costo1 && f.getCostoBiglietto()<=costo2)
+					l.add(f);
+			}
+			return l;
+			
+		case PRIMA_DI:
+			for (Film f : mappaFilm.values()) {
+				if(f.getCostoBiglietto() <= costo1)
+					l.add(f);
+			}
+			return l;
+			
+		case DOPO_DI:
+			for (Film f : mappaFilm.values()) {
+				if(f.getCostoBiglietto() >= costo1)
+					l.add(f);
+			}
+			return l;
+			
+		default:
+			System.out.println("Ricerca non valida");
+			return l;
+	
 		}
-		return l;
 	}
 	
 	public LinkedList<Film> trovaFilm(int tipoRicerca, String ...parametri){
@@ -129,18 +180,10 @@ public class GestioneFilm {
 			return trovaPerGenere(parametri[0]);
 			
 		case 3:
-			if(parametri.length<2) {
-				System.out.println("Per la ricerca servono due date!");
-				return new LinkedList<Film>();
-			}
-			return trovaPerDate(LocalDate.parse(parametri[0]), LocalDate.parse(parametri[1]));
+			return trovaPerDate(Criterio.valueOf(parametri[0]), LocalDate.parse(parametri[1]), LocalDate.parse(parametri[2]));
 			
 		case 4:
-			if(parametri.length<2) {
-				System.out.println("Per la ricerca servono due valori!");
-				return new LinkedList<Film>();
-			}
-			return trovaPerCosto(Double.parseDouble(parametri[0]), Double.parseDouble(parametri[1]));
+			return trovaPerCosto(Criterio.valueOf(parametri[0]), Double.parseDouble(parametri[1]), Double.parseDouble(parametri[2]));
 			
 		default:
 			System.out.println("Tipo di ricerca non valido!");
