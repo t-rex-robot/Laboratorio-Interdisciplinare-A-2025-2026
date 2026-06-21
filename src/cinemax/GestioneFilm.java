@@ -99,7 +99,7 @@ public class GestioneFilm {
 	public LinkedList<Film> trovaPerGenere(String g){
 		LinkedList<Film> l = new LinkedList<Film>();
 		for (Film f : mappaFilm.values()) {
-			if((f.getGenere().toLowerCase())==g.toLowerCase())
+			if (f.getGenere().equalsIgnoreCase(g))
 				l.add(f);
 		}
 		return l;
@@ -171,6 +171,7 @@ public class GestioneFilm {
 		}
 	}
 	
+	//Non so se tenerlo, non sembra supportare le combinazioni di filtri
 	public LinkedList<Film> trovaFilm(int tipoRicerca, String ...parametri){
 		switch(tipoRicerca) {
 		case 1:
@@ -214,6 +215,71 @@ public class GestioneFilm {
 	    }
 
 	    return null;
+	}
+	
+	//Ricerca di un film con i filtri creati prima
+	public List<Film> cercaFilm(
+	        String titolo,
+	        String genere,
+	        Criterio criterioDate,
+	        LocalDate data1,
+	        LocalDate data2,
+	        Criterio criterioCosto,
+	        Double costo1,
+	        Double costo2
+	) {
+
+	    List<Film> risultati = getTuttiFilm();
+
+	    // filtro titolo
+	    if (titolo != null && !titolo.isBlank()) {
+	        risultati.retainAll(
+	                trovaPerTitolo(titolo)
+	        );
+	    }
+
+	    // filtro genere
+	    if (genere != null && !genere.isBlank()) {
+	        risultati.retainAll(
+	                trovaPerGenere(genere)
+	        );
+	    }
+
+	    // filtro date
+	    if (criterioDate != null && data1 != null) {
+
+	        if (criterioDate == Criterio.COMPRESO_TRA && data2 == null)
+	            throw new FormatoDatiNonValidoException(
+	                    "Serve una seconda data"
+	            );
+
+	        risultati.retainAll(
+	                trovaPerDate(
+	                        criterioDate,
+	                        data1,
+	                        data2
+	                )
+	        );
+	    }
+
+	    // filtro costo
+	    if (criterioCosto != null && costo1 != null) {
+
+	        if (criterioCosto == Criterio.COMPRESO_TRA && costo2 == null)
+	            throw new FormatoDatiNonValidoException(
+	                    "Serve un secondo costo"
+	            );
+
+	        risultati.retainAll(
+	                trovaPerCosto(
+	                        criterioCosto,
+	                        costo1,
+	                        costo2
+	                )
+	        );
+	    }
+
+	    return risultati;
 	}
 	
 	public void visualizzaProiezione(Film f) {

@@ -56,56 +56,56 @@ public class menu {
 
         while (esegui) {
 
-            mostraTitolo();
+            try {
 
-            if (utenteLoggato == null) {
+                mostraTitolo();
 
-                //MENU NON LOGGATO
-                System.out.println("\nPrego selezionare l'opzione che volete eseguire:");
-                System.out.println("1. Login");
-                System.out.println("2. Registrarsi");
-                System.out.println("3. Palinsesto attuale");
-                System.out.println("4. Chiudere il programma");
+                if (utenteLoggato == null) {
 
-                System.out.print("\nScelta: ");
+                    System.out.println("\n1. Login");
+                    System.out.println("2. Registrarsi");
+                    System.out.println("3. Palinsesto");
+                    System.out.println("4. Esci");
 
-                String scelta = scanner.nextLine();
+                    System.out.print("Scelta: ");
+                    String scelta = scanner.nextLine();
 
-                switch (scelta) {
+                    switch (scelta) {
 
-                    case "1":
-                        login();
-                        break;
+                        case "1":
+                            login();
+                            break;
 
-                    case "2":
-                        registrazione();
-                        break;
+                        case "2":
+                            registrazione();
+                            break;
 
-                    case "3":
-                        mostraProiezioni();
-                        break;
+                        case "3":
+                            mostraProiezioni();
+                            break;
 
-                    case "4":
-                        System.out.println("\nArrivederci e torna quando vuoi su CINEMAX!");
-                        esegui = false;
-                        break;
+                        case "4":
+                            esegui = false;
+                            break;
 
-                    default:
-                        System.out.println("\nOpzione non valida.");
+                        default:
+                            System.out.println("Opzione non valida.");
+                    }
+
+                } else {
+                    menuRuolo();
                 }
 
-            } else {
+            } catch (Exception e) {
 
-                // MENU IN BASE AL RUOLO
-                menuRuolo();
+                System.out.println("\n Errore: " + e.getMessage());
+ 
             }
-
-            pausa();
+            pausa(); 
         }
 
         scanner.close();
     }
-
     // Titolo iniziale
     private void mostraTitolo() {
 
@@ -176,32 +176,169 @@ public class menu {
     // Proiezioni 
     private void mostraProiezioni() {
 
+        Scanner sc = new Scanner(System.in);
+
         System.out.println("\n--- PALINSESTO ATTUALE ---");
 
-        System.out.println("\n--- PROIEZIONI DISPONIBILI ---\n");
+        System.out.print("Vuoi applicare una ricerca? (s/n): ");
 
-        List<Film> filmList = new ArrayList<>(gestioneFilm.getTuttiFilm());
+        List<Film> filmList;
+
+        if (sc.nextLine().equalsIgnoreCase("s")) {
+
+            System.out.print("Titolo (INVIO per saltare): ");
+            String titolo = sc.nextLine();
+
+            System.out.print("Genere (INVIO per saltare): ");
+            String genere = sc.nextLine();
+
+            // DATE
+            System.out.println(
+                "\nFiltro data: "
+                + "\n0 Nessuno"
+                + "\n1 Dopo"
+                + "\n2 Prima"
+                + "\n3 Tra"
+            );
+
+            int sceltaData =
+                    Integer.parseInt(sc.nextLine());
+
+            GestioneFilm.Criterio critData = null;
+
+            LocalDate data1 = null;
+            LocalDate data2 = null;
+
+            if (sceltaData > 0) {
+
+                System.out.print("Data (yyyy-MM-dd): ");
+                data1 =
+                        LocalDate.parse(
+                                sc.nextLine()
+                        );
+
+                switch (sceltaData) {
+
+                    case 1:
+                        critData =
+                                GestioneFilm.Criterio.DOPO_DI;
+                        break;
+
+                    case 2:
+                        critData =
+                                GestioneFilm.Criterio.PRIMA_DI;
+                        break;
+
+                    case 3:
+                        critData =
+                                GestioneFilm.Criterio.COMPRESO_TRA;
+
+                        System.out.print(
+                                "Seconda data: "
+                        );
+
+                        data2 =
+                                LocalDate.parse(
+                                        sc.nextLine()
+                                );
+
+                        break;
+                }
+            }
+
+            // COSTO
+            System.out.println(
+                "\nFiltro costo:"
+                + "\n0 Nessuno"
+                + "\n1 Maggiore di"
+                + "\n2 Minore di"
+                + "\n3 Tra"
+            );
+
+            int sceltaCosto =
+                    Integer.parseInt(
+                            sc.nextLine()
+                    );
+
+            GestioneFilm.Criterio critCosto = null;
+
+            Double costo1 = null;
+            Double costo2 = null;
+
+            if (sceltaCosto > 0) {
+
+                System.out.print("Costo: ");
+
+                costo1 =
+                        Double.parseDouble(
+                                sc.nextLine()
+                        );
+
+                switch (sceltaCosto) {
+
+                    case 1:
+                        critCosto =
+                                GestioneFilm.Criterio.DOPO_DI;
+                        break;
+
+                    case 2:
+                        critCosto =
+                                GestioneFilm.Criterio.PRIMA_DI;
+                        break;
+
+                    case 3:
+
+                        critCosto =
+                                GestioneFilm.Criterio.COMPRESO_TRA;
+
+                        System.out.print(
+                                "Secondo costo: "
+                        );
+
+                        costo2 =
+                                Double.parseDouble(
+                                        sc.nextLine()
+                                );
+
+                        break;
+                }
+            }
+
+            filmList =
+                    gestioneFilm.cercaFilm(
+                            titolo,
+                            genere,
+                            critData,
+                            data1,
+                            data2,
+                            critCosto,
+                            costo1,
+                            costo2
+                    );
+
+        } else {
+
+            filmList =
+                    gestioneFilm.getTuttiFilm();
+        }
 
         if (filmList.isEmpty()) {
 
-            System.out.println("Nessuna proiezione disponibile al momento.");
+            System.out.println(
+                    "Nessun film trovato."
+            );
+
             return;
         }
 
         for (Film f : filmList) {
 
-            System.out.println("-----------------------------------");
-            System.out.println("Titolo: " + f.getTitolo());
-            System.out.println("Genere: " + f.getGenere());
-            System.out.println("Regista: " + f.getRegista());
-            System.out.println("Data: " + f.getData());
-            System.out.println("Ora: " + f.getOra());
-            System.out.println("Durata: " + f.getDurata() + " min");
-            System.out.println("Costo: " + f.getCostoBiglietto());
-            System.out.println("Posti disponibili: " + f.getPostiSala());
-        }
+            System.out.println(
+                    "\n---------------------"
+            );
 
-        System.out.println("-----------------------------------");
+            gestioneFilm.visualizzaProiezione(f);
+        }
     }
     
     //Menu del CLIENTE
@@ -217,6 +354,7 @@ public class menu {
         System.out.println("5. Visualizza proiezioni");
         System.out.println("6. Logout");
         System.out.println("7. Chiudi programma");
+        Scanner scanner = new Scanner(System.in);
 
         System.out.print("\nScelta: ");
 
@@ -225,41 +363,49 @@ public class menu {
         switch (scelta) {
 
             case "1":
-                System.out.println("Inserisci titolo film:");
-                String titolo = scanner.nextLine();
+            	System.out.println("=== PRENOTAZIONE BIGLIETTI ===");
 
-                System.out.println("Inserisci numero biglietti:");
-                int n = Integer.parseInt(scanner.nextLine());
 
-                // ricerca film (semplificata: da palinsesto)
-                List<Film> filmList = gestioneFilm.getTuttiFilm();
+            	// INPUT UTENTE
+            	System.out.println("Inserisci titolo film:");
+            	String titolo = scanner.nextLine();
 
-                Film scelto = null;
+            	System.out.println("Inserisci data (yyyy-MM-dd):");
+            	LocalDate data = LocalDate.parse(scanner.nextLine());
 
-                for (Film f : filmList) {
-                    if (f.getTitolo().equalsIgnoreCase(titolo)) {
-                        scelto = f;
-                        break;
-                    }
-                }
+            	System.out.println("Inserisci ora (HH:mm):");
+            	LocalTime ora = LocalTime.parse(scanner.nextLine());
 
-                if (scelto == null) {
-                    System.out.println("Film non trovato.");
-                    break;
-                }
+            	System.out.println("Inserisci numero biglietti:");
+            	int n = Integer.parseInt(scanner.nextLine());
 
-                boolean ok = gestionePrenotazioni.creaPrenotazione(
-                        utenteLoggato,
-                        scelto,
-                        n
-                );
+            	Film scelto = gestioneFilm.trovaProiezione(titolo, data, ora);
 
-                if (ok) {
-                    System.out.println("Prenotazione creata con successo!");
-                }
+            	if (scelto == null) {
+            	    System.out.println(" Proiezione non trovata.");
+            	    break;
+            	}
 
-                break;
+            	if (scelto.getPostiSala() < n) {
+            	    System.out.println(" Posti insufficienti disponibili.");
+            	    break;
+            	}
+            	boolean ok = gestionePrenotazioni.creaPrenotazione(
+            	        utenteLoggato,
+            	        scelto,
+            	        n
+            	);
+
+            	if (ok) {
+            	    System.out.println("Prenotazione effettuata con successo!");
+            	} else {
+            	    System.out.println("Errore nella prenotazione.");
+            	}
+
+            	break;
+            	
             case "2":
+            	
             	   System.out.println("Inserisci codice prenotazione:");
             	    String codiceMod = scanner.nextLine();
 
@@ -289,6 +435,14 @@ public class menu {
             case "4":
             	 System.out.println("Inserisci codice prenotazione:");
             	    String codiceElim = scanner.nextLine();
+            	    
+            	    System.out.println("Sei sicuro di voler eliminare la prenotazione? (s/n)");
+            	    String conferma = scanner.nextLine();
+
+            	    if (!conferma.equalsIgnoreCase("s")) {
+            	        System.out.println("Operazione annullata.");
+            	        break;
+            	    }
 
             	    boolean elim = gestionePrenotazioni.eliminaPrenotazione(codiceElim);
 
@@ -397,9 +551,8 @@ public class menu {
         System.out.println("1. Aggiungi proiezione");
         System.out.println("2. Modifica proiezione");
         System.out.println("3. Elimina proiezione");
-        System.out.println("4. Cerca proiezione");
-        System.out.println("5. Logout");
-        System.out.println("6. Chiudi programma");
+        System.out.println("4. Logout");
+        System.out.println("5. Chiudi programma");
 
         System.out.print("\nScelta: ");
 
@@ -495,6 +648,14 @@ public class menu {
             	LocalTime oraE = LocalTime.parse(scanner.nextLine());
 
             	Film filmDaEliminare = gestioneFilm.trovaProiezione(titoloE, dataE, oraE);
+            	
+            	System.out.println("Sei sicuro di voler eliminare la proiezione? (s/n)");
+            	String conferma = scanner.nextLine();
+
+            	if (!conferma.equalsIgnoreCase("s")) {
+            	    System.out.println("Operazione annullata.");
+            	    break;
+            	}
 
             	if (filmDaEliminare == null) {
             	    System.out.println("Proiezione non trovata!");
@@ -510,45 +671,14 @@ public class menu {
             	}
 
                 break;
+
             case "4":
-            	System.out.print("Titolo film: ");
-            	String titoloC = scanner.nextLine();
-
-            	System.out.print("Data (AAAA-MM-GG): ");
-            	LocalDate dataC = LocalDate.parse(scanner.nextLine());
-
-            	System.out.print("Ora (HH:MM): ");
-            	LocalTime oraC = LocalTime.parse(scanner.nextLine());
-
-            	Film film = gestioneFilm.trovaProiezione(titoloC, dataC, oraC);
-
-            	if (film == null) {
-            	    System.out.println("Proiezione non trovata!");
-            	} else {
-            	    gestioneFilm.visualizzaProiezione(film);
-            	}
-                if (film != null) {
-
-                    System.out.println(
-                            "\n===== PROIEZIONE TROVATA ====="
-                    );
-
-                    System.out.println(film);
-
-                } else {
-
-                    System.out.println( "Proiezione non trovata.");
-                }
-
-                break;
-
-            case "5":
                 gestioneUtenti.logout();
                 utenteLoggato = null;
                 System.out.println("Logout effettuato con successo.");
                 break;
 
-            case "6":
+            case "5":
                 System.out.println("Arrivederci!");
                 System.exit(0);
                 break;
