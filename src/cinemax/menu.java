@@ -1,22 +1,27 @@
 package cinemax;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Scanner;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Scanner;
 
 public class menu {
 
     // Scanner per leggere input utente
-    private Scanner scanner;
+    private final Scanner scanner;
 
     // Gestori del sistema
     private GestioneFilm gestioneFilm;
     private GestioneUtenti gestioneUtenti;
-    private GestionePrenotazioni gestionePrenotazioni;
+    private final GestionePrenotazioni gestionePrenotazioni;
     private Utente utenteLoggato = null;
 
-    // Costruttore
+    /**
+     * Costruisce il menu principale collegando i moduli di gestione del sistema.
+     *
+     * @param gestioneFilm gestore delle proiezioni
+     * @param gestioneUtenti gestore degli utenti
+     * @param gestionePrenotazioni gestore delle prenotazioni
+     */
     public menu(GestioneFilm gestioneFilm, GestioneUtenti gestioneUtenti,GestionePrenotazioni gestionePrenotazioni) {
 
         this.scanner = new Scanner(System.in);
@@ -26,28 +31,32 @@ public class menu {
         this.gestionePrenotazioni = gestionePrenotazioni;
     }
     
+    /**
+     * Indirizza l'utente loggato verso il sottomenu appropriato in base al suo ruolo.
+     */
     //Router menu in base al ruolo
     private void menuRuolo() {
 
         switch (utenteLoggato.getRuolo()) {
 
-            case CLIENTE:
-                menuCliente();
-                break;
+            case CLIENTE -> menuCliente();
 
-            case BIGLIETTAIO:
-                menuBigliettaio();
-                break;
+            case BIGLIETTAIO -> menuBigliettaio();
 
-            case PROIEZIONISTA:
-                menuProiezionista();
-                break;
+            case PROIEZIONISTA -> menuProiezionista();
 
-            default:
+            default -> {
                 System.out.println("Ruolo non valido");
                 utenteLoggato = null;
+            }
         }
     }
+
+     /**
+    * Avvia il menu principale. Mostra il titolo, gestisce le opzioni
+    * per gli utenti non autenticati (login, registrazione, palinsesto) e
+    * indirizza gli utenti connessi ai rispettivi menu in base al ruolo.
+    */
 
     // Avvio del menu
     public void avvia() {
@@ -72,24 +81,15 @@ public class menu {
 
                     switch (scelta) {
 
-                        case "1":
-                            login();
-                            break;
+                        case "1" -> login();
 
-                        case "2":
-                            registrazione();
-                            break;
+                        case "2" -> registrazione();
 
-                        case "3":
-                            mostraProiezioni();
-                            break;
+                        case "3" -> mostraProiezioni();
 
-                        case "4":
-                            esegui = false;
-                            break;
+                        case "4" -> esegui = false;
 
-                        default:
-                            System.out.println("Opzione non valida.");
+                        default -> System.out.println("Opzione non valida.");
                     }
 
                 } else {
@@ -106,6 +106,9 @@ public class menu {
 
         scanner.close();
     }
+    /**
+     * Stampa il banner iniziale del programma.
+     */
     // Titolo iniziale
     private void mostraTitolo() {
 
@@ -125,6 +128,9 @@ public class menu {
         System.out.println("============== BENVENUTI IN CINEMAX ==============");
     }
 
+    /**
+     * Gestisce il login dell'utente.
+     */
     // Login 
     private void login() {
 
@@ -132,6 +138,9 @@ public class menu {
 
     }
 
+    /**
+     * Gestisce la registrazione di un nuovo utente cliente.
+     */
     // Registrazione 
     private void registrazione() {
     	
@@ -173,6 +182,10 @@ public class menu {
 
     }
 
+    /**
+     * Visualizza il palinsesto delle proiezioni con opzione di ricerca per titolo,
+     * genere, data e costo.
+     */
     // Proiezioni 
     private void mostraProiezioni() {
 
@@ -193,13 +206,13 @@ public class menu {
             String genere = sc.nextLine();
 
             // DATE
-            System.out.println(
-                "\nFiltro data: "
-                + "\n0 Nessuno"
-                + "\n1 Dopo"
-                + "\n2 Prima"
-                + "\n3 Tra"
-            );
+            System.out.println("""
+                               
+                               Filtro data: 
+                               0 Nessuno
+                               1 Dopo
+                               2 Prima
+                               3 Tra""");
 
             int sceltaData =
                     Integer.parseInt(sc.nextLine());
@@ -219,17 +232,13 @@ public class menu {
 
                 switch (sceltaData) {
 
-                    case 1:
-                        critData =
+                    case 1 -> critData =
                                 GestioneFilm.Criterio.DOPO_DI;
-                        break;
 
-                    case 2:
-                        critData =
+                    case 2 -> critData =
                                 GestioneFilm.Criterio.PRIMA_DI;
-                        break;
 
-                    case 3:
+                    case 3 -> {
                         critData =
                                 GestioneFilm.Criterio.COMPRESO_TRA;
 
@@ -241,19 +250,18 @@ public class menu {
                                 LocalDate.parse(
                                         sc.nextLine()
                                 );
-
-                        break;
+                    }
                 }
             }
 
             // COSTO
-            System.out.println(
-                "\nFiltro costo:"
-                + "\n0 Nessuno"
-                + "\n1 Maggiore di"
-                + "\n2 Minore di"
-                + "\n3 Tra"
-            );
+            System.out.println("""
+                               
+                               Filtro costo:
+                               0 Nessuno
+                               1 Maggiore di
+                               2 Minore di
+                               3 Tra""");
 
             int sceltaCosto =
                     Integer.parseInt(
@@ -276,18 +284,13 @@ public class menu {
 
                 switch (sceltaCosto) {
 
-                    case 1:
-                        critCosto =
+                    case 1 -> critCosto =
                                 GestioneFilm.Criterio.DOPO_DI;
-                        break;
 
-                    case 2:
-                        critCosto =
+                    case 2 -> critCosto =
                                 GestioneFilm.Criterio.PRIMA_DI;
-                        break;
 
-                    case 3:
-
+                    case 3 -> {
                         critCosto =
                                 GestioneFilm.Criterio.COMPRESO_TRA;
 
@@ -299,8 +302,7 @@ public class menu {
                                 Double.parseDouble(
                                         sc.nextLine()
                                 );
-
-                        break;
+                    }
                 }
             }
 
@@ -341,6 +343,10 @@ public class menu {
         }
     }
     
+    /**
+     * Visualizza il menu dedicato ai clienti con opzioni per prenotare,
+     * modificare, visualizzare e cancellare prenotazioni.
+     */
     //Menu del CLIENTE
     
     private void menuCliente() {
@@ -473,6 +479,10 @@ public class menu {
         }
     }
     
+    /**
+     * Visualizza il menu dedicato ai bigliettai con opzioni per visualizzare
+     * e cercare prenotazioni.
+     */
     //Menu del BIGLIETTAIO
     
     private void menuBigliettaio() {
@@ -542,6 +552,10 @@ public class menu {
         }
     }
     
+    /**
+     * Visualizza il menu dedicato ai proiezionisti con opzioni per aggiungere,
+     * modificare e eliminare proiezioni.
+     */
     //Menu del PROIEZIONISTA
     
     private void menuProiezionista() {
@@ -688,6 +702,9 @@ public class menu {
         }
     }
 
+    /**
+     * Mette in pausa l'esecuzione in attesa che l'utente prema INVIO.
+     */
     // Pausa terminale
     private void pausa() {
 
@@ -695,6 +712,9 @@ public class menu {
         scanner.nextLine();
     }
 
+    /**
+     * Simula la pulizia dello schermo stampando più righe vuote.
+     */
     // Simula pulizia schermo
     private void pulisciSchermo() {
 

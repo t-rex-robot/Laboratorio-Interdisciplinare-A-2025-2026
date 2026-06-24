@@ -13,8 +13,8 @@ public class Prenotazione {
 	//Attributi Prenotazione
 	
     private String codicePrenotazione;
-    private String usernameUtente;
-    private String titoloFilm;
+    private final String usernameUtente;
+    private final String titoloFilm;
     private LocalDate dataProiezione;
     private LocalTime oraProiezione;
     private int numeroBiglietti;

@@ -5,8 +5,10 @@ import java.time.LocalTime;
 import java.util.*;
 
 /**
- * Gestisce le prenotazioni degli utenti: caricamento/salvataggio su file,
- * creazione, ricerca, modifica ed eliminazione delle prenotazioni.
+ * Gestisce le prenotazioni: caricamento/salvataggio, creazione, ricerca,
+ * visualizzazione, modifica e cancellazione. Supporta operazioni per
+ * bigliettai (ricerca e visualizzazione) e clienti. Dati salvati in
+ * {@code data/prenotazioni.csv}; ogni prenotazione ha un codice univoco (UUID).
  */
 public class GestionePrenotazioni {
 
@@ -27,9 +29,9 @@ public class GestionePrenotazioni {
     }
     
     /**
-     * Carica le prenotazioni dal file CSV in `PATH` e popola la mappa interna.
-     *
-     * @throws FormatoDatiNonValidoException se una riga del file non rispetta il formato previsto
+     * Legge tutte le prenotazioni da file ({@code data/prenotazioni.csv}) e le
+     * inserisce nella mappa. Ogni riga del CSV deve rispettare il
+     * formato atteso altrimenti viene sollevata una {@link FormatoDatiNonValidoException}.
      */
     public void caricaPrenotazioniDaFile() throws FormatoDatiNonValidoException {
 
@@ -72,7 +74,9 @@ public class GestionePrenotazioni {
     }
     
     /**
-     * Salva tutte le prenotazioni correnti sul file CSV, sovrascrivendo il contenuto.
+     * Scrive sul file tutte le prenotazioni correnti (sovrascrive il file
+     * esistente). Usato per salvare lo stato dopo creazioni, modifiche o
+     * cancellazioni.
      */
     public void salvaPrenotazioniSuFile() {
     	
@@ -97,7 +101,7 @@ public class GestionePrenotazioni {
         }
     }
     
-    //Genera il codice univoco per la prenotazione tramite un randomizzatore
+    // Genera un codice univoco per la prenotazione usando UUID
 
     private String generaCodicePrenotazione() {
 
@@ -106,11 +110,11 @@ public class GestionePrenotazioni {
     
     /**
      * Crea una nuova prenotazione per l'utente e aggiorna i posti del film.
-     * Genera un codice univoco e persiste la prenotazione su file.
+     * Genera un codice univoco e salva la prenotazione su file.
      *
-     * @param utente oggetto `Utente` che effettua la prenotazione
-     * @param film oggetto `Film` relativo alla proiezione
-     * @param numeroBiglietti numero di biglietti richiesti
+     * @param utente l'utente che prenota
+     * @param film la proiezione scelta
+     * @param numeroBiglietti il numero di biglietti richiesti
      * @return true se la prenotazione è stata creata con successo, false altrimenti
      */
     public boolean creaPrenotazione(Utente utente, Film film, int numeroBiglietti) {
@@ -146,10 +150,11 @@ public class GestionePrenotazioni {
 		}
     
     /**
-     * Cerca una prenotazione per codice.
+     * Restituisce la prenotazione corrispondente al codice fornito, oppure
+     * null se non esiste.
      *
      * @param codice codice della prenotazione
-     * @return l'oggetto `Prenotazione` se trovato, altrimenti null
+     * @return la prenotazione trovata o null
      */
     public Prenotazione cercaPerCodice(String codice) {
 
@@ -162,7 +167,8 @@ public class GestionePrenotazioni {
     }
     
     /**
-     * Restituisce tutte le prenotazioni associate a uno username.
+     * Restituisce l'elenco delle prenotazioni associate a uno specifico
+     * username.
      *
      * @param username username dell'utente
      * @return lista di prenotazioni dell'utente
@@ -182,7 +188,8 @@ public class GestionePrenotazioni {
     }
     
     /**
-     * Cerca prenotazioni il cui titolo del film contiene la stringa fornita.
+     * Cerca tutte le prenotazioni il cui titolo contiene la stringa
+     * indicata (ricerca parziale, case-insensitive).
      *
      * @param titolo sottostringa del titolo da cercare
      * @return lista di prenotazioni corrispondenti
@@ -203,7 +210,7 @@ public class GestionePrenotazioni {
     }
     
     /**
-     * Restituisce le prenotazioni la cui data di proiezione rientra nell'intervallo fornito.
+     * Restituisce le prenotazioni con data di proiezione compresa nell'intervallo fornito.
      *
      * @param inizio data di inizio (inclusa)
      * @param fine data di fine (inclusa)
@@ -263,9 +270,13 @@ public class GestionePrenotazioni {
     }
     
     /**
-     * Stampa a terminale i dettagli di una prenotazione.
+     * Stampa i dettagli di una prenotazione.
+     * - codice prenotazione
+     * - nome e cognome del cliente (username)
+     * - data e ora della proiezione
+     * - numero di biglietti, costo unitario e totale
      *
-     * @param p oggetto `Prenotazione` da visualizzare
+     * @param p la prenotazione da visualizzare
      */
     public void visualizzaPrenotazione(Prenotazione p) {
 
@@ -320,11 +331,13 @@ public class GestionePrenotazioni {
     }
     
     /**
-     * Modifica il numero di biglietti di una prenotazione futura, adeguando i posti del film.
+     * Modifica il numero di biglietti associati a una prenotazione futura.
+     * Aggiorna i posti della proiezione di conseguenza (se si aumenta
+     * verifica la disponibilità, se si riduce si liberano posti).
      *
-     * @param codice codice della prenotazione
+     * @param codice codice della prenotazione da modificare
      * @param nuoviBiglietti nuovo numero di biglietti richiesto
-     * @return true se la modifica è stata applicata, false altrimenti
+     * @return true se la modifica è stata applicata correttamente
      */
     public boolean modificaPrenotazione(String codice, int nuoviBiglietti) {
 

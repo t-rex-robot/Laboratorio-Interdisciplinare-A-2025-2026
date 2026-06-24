@@ -26,7 +26,7 @@ public class GestioneUtenti {
 	}
 	
 	/**
-	 * All'avvio del programma carica gli utenti dal file CSV nella hash map.
+	 * All'avvio del programma carica gli utenti dal file CSV nella mappa.
 	 *
 	 * @throws FormatoDatiNonValidoException se una riga del file non ha il formato corretto
 	 */
@@ -77,7 +77,7 @@ public class GestioneUtenti {
 	/**
 	 * Controlla se la password in chiaro corrisponde a quella memorizzata.
 	 * Se la password memorizzata è un hash SHA-256, confronta l'hash calcolato;
-	 * altrimenti confronta direttamente la password in chiaro per compatibilità.
+	 * altrimenti confronta direttamente la password in chiaro.
 	 *
 	 * @param username lo username dell'utente
 	 * @param plainPassword la password in chiaro inserita
@@ -104,7 +104,7 @@ public class GestioneUtenti {
 	}
 	
 	/**
-	 * Registra un nuovo cliente e lo aggiunge sia nella hash map sia sul file CSV.
+	 * Registra un nuovo cliente e lo aggiunge sia nella mappa sia sul file CSV.
 	 *
 	 * @param n nome del cliente
 	 * @param c cognome del cliente

@@ -1,9 +1,14 @@
 package cinemax;
+import java.io.*;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.io.*;
 
+/**
+ * Gestisce la ricerca e la visualizzazione delle proiezioni disponibili.
+ * Fornisce metodi per filtrare le proiezioni per titolo parziale, genere,
+ * intervallo di date e costo del biglietto senza richiedere autenticazione.
+ */
 public class GestioneFilm {
 	public enum Criterio{
 		COMPRESO_TRA, PRIMA_DI, DOPO_DI;
@@ -15,6 +20,13 @@ public class GestioneFilm {
 		mappaFilm = new HashMap<>();
 	}
 	
+	/**
+	 * Carica le proiezioni dal file CSV nella mappa.
+	 * Ogni riga del file deve rispettare il formato previsto, altrimenti viene
+	 * sollevata un'eccezione di formato non valido.
+	 *
+	 * @throws FormatoDatiNonValidoException se il file non rispetta il formato previsto
+	 */
 	public void caricaFilmDaFile() throws FormatoDatiNonValidoException {
 		try(BufferedReader br = new BufferedReader(new FileReader(PATH))){
 			String riga;
@@ -30,6 +42,11 @@ public class GestioneFilm {
 				
 	}
 	
+	/**
+	 * Salva tutte le proiezioni correnti su file CSV.
+	 * Sovrascrive il contenuto esistente del file per aggiornare lo stato 
+	 * delle proiezioni.
+	 */
 	public void salvaFilmSuFile() {
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(PATH))){
 			for(Film f : mappaFilm.values()) {
@@ -41,11 +58,24 @@ public class GestioneFilm {
 				System.err.println("Errore nel salvataggio dei film " + e.getMessage());
 			}
 	}
-	//mostra tutti i film caricati
+	/**
+	 * Restituisce l'elenco di tutte le proiezioni caricate in memoria.
+	 *
+	 * @return lista completa delle proiezioni attualmente disponibili
+	 */
 	public List<Film> getTuttiFilm() {
 	    return new ArrayList<>(mappaFilm.values());
 	}
 	
+	/**
+	 * Controlla che la nuova proiezione non si sovrapponga a 
+	 * quelle già programmate per lo stesso giorno.
+	 *
+	 * @param data data della nuova proiezione
+	 * @param ora ora della nuova proiezione 
+	 * @param durata durata in minuti della nuova proiezione
+	 * @return true se la nuova proiezione non si sovrappone ad altre proiezioni
+	 */
 	public boolean controlloDurata(LocalDate data, LocalTime ora, int durata) {
 		for(Film f : mappaFilm.values()) {
 			if(f.getData().equals(data)) {
@@ -57,6 +87,22 @@ public class GestioneFilm {
 		return true;
 	}
 	
+	/**
+	 * Crea una nuova proiezione e la salu file.
+ 	 * Il metodo verifica la validità della data, il limite di età minima e 
+	 * controlla che non ci siano sovrapposizioni con altre proiezioni già programmate.
+	 *
+	 * @param data data della proiezione
+	 * @param ora ora della proiezione
+	 * @param titolo titolo del film
+	 * @param genere genere del film
+	 * @param regista regista del film
+	 * @param anno anno di uscita del film
+	 * @param durata durata in minuti
+	 * @param etaMinima età minima richiesta per la proiezione
+	 * @param costoBiglietto costo del biglietto
+	 * @return true se la proiezione è stata creata e salvata correttamente
+	 */
 	public boolean creaProiezione(LocalDate data, LocalTime ora, String titolo, String genere, String regista, int anno, int durata, int etaMinima,  double costoBiglietto) {
 		if(data.isBefore(LocalDate.now())) {
 			throw new FilmException("Data non valida");
@@ -69,7 +115,7 @@ public class GestioneFilm {
 		if(mappaFilm.containsKey(data.toString()+ora.toString())) {
 			throw new FilmException("Esiste già una proiezione per la stessa data e ora");
 		}
-		//controlla che la durata del potenziale nuovo film sia compatibile con quelle delle proiezioni già esistenti nello stesso giorno
+		//controlla che la durata del nuovo film non si sovrapponga ad altre proiezioni nello stesso giorno
 		if(controlloDurata(data, ora, durata)) {
 			Film f = new Film(data, ora, titolo, genere, regista, anno, durata, etaMinima, costoBiglietto);
 			mappaFilm.put(f.getChiave(), f);
@@ -87,8 +133,15 @@ public class GestioneFilm {
 	return false;	
 	}
 	
+	/**
+	 * Restituisce le proiezioni il cui titolo contiene la sottostringa
+	 * specificata. Il confronto è case-insensitive per agevolare la ricerca.
+	 *
+	 * @param t sottostringa del titolo da cercare
+	 * @return elenco delle proiezioni corrispondenti
+	 */
 	public LinkedList<Film> trovaPerTitolo(String t){
-		LinkedList<Film> l = new LinkedList<Film>();
+		LinkedList<Film> l = new LinkedList<>();
 		for (Film f : mappaFilm.values()) {
 			if((f.getTitolo().toLowerCase()).contains(t.toLowerCase()))
 				l.add(f);
@@ -96,8 +149,14 @@ public class GestioneFilm {
 		return l;
 	}
 	
+	/**
+	 * Restituisce le proiezioni aggregate per genere specificato.
+	 *
+	 * @param g genere del film
+	 * @return elenco delle proiezioni corrispondenti al genere
+	 */
 	public LinkedList<Film> trovaPerGenere(String g){
-		LinkedList<Film> l = new LinkedList<Film>();
+		LinkedList<Film> l = new LinkedList<>();
 		for (Film f : mappaFilm.values()) {
 			if (f.getGenere().equalsIgnoreCase(g))
 				l.add(f);
@@ -105,8 +164,18 @@ public class GestioneFilm {
 		return l;
 	}
 	
+	/**
+	 * Applica un filtro temporale alle proiezioni.
+	 * Supporta i criteri {@code PRIMA_DI}, {@code DOPO_DI} e 
+	 * {@code COMPRESO_TRA} per scegliere l'intervallo di date.
+	 *
+	 * @param crit criterio di ricerca delle date
+	 * @param data1 data principale del filtro
+	 * @param data2 data secondaria, valida solo per {@code Criterio.COMPRESO_TRA}
+	 * @return elenco delle proiezioni che soddisfano il criterio temporale
+	 */
 	public LinkedList<Film> trovaPerDate(Criterio crit, LocalDate data1, LocalDate data2){
-		LinkedList<Film> l = new LinkedList<Film>();
+		LinkedList<Film> l = new LinkedList<>();
 		switch(crit) {
 		case COMPRESO_TRA:
 			if(data2.isBefore(data1)) throw new FormatoDatiNonValidoException("Date non valide");
@@ -137,8 +206,17 @@ public class GestioneFilm {
 		}
 	}
 	
+	/**
+	 * Applica un filtro sul costo del biglietto.
+	 * Supporta ricerche per prezzo minore, maggiore o compreso tra due soglie.
+	 *
+	 * @param crit criterio di confronto sul costo
+	 * @param costo1 primo valore del filtro
+	 * @param costo2 secondo valore, valido solo per {@code Criterio.COMPRESO_TRA}
+	 * @return elenco delle proiezioni che soddisfano il filtro di costo
+	 */
 	public LinkedList<Film> trovaPerCosto(Criterio crit, double costo1, double costo2){
-		LinkedList<Film> l = new LinkedList<Film>();
+		LinkedList<Film> l = new LinkedList<>();
 		if(costo1<0) throw new FormatoDatiNonValidoException("Non esistono costi negativi");
 		
 		switch(crit) {
@@ -171,29 +249,50 @@ public class GestioneFilm {
 		}
 	}
 	
-	//Non so se tenerlo, non sembra supportare le combinazioni di filtri
+	/**
+	 * Esegue una ricerca con un singolo criterio (titolo, genere, data o costo).
+	 *
+	 * @param tipoRicerca tipo di filtro da applicare (1=titolo, 2=genere, 3=data, 4=costo)
+	 * @param parametri parametri del filtro
+	 * @return elenco delle proiezioni risultanti
+	 */
 	public LinkedList<Film> trovaFilm(int tipoRicerca, String ...parametri){
 		switch(tipoRicerca) {
-		case 1:
-			return trovaPerTitolo(parametri[0]);
+		case 1 -> {
+                    return trovaPerTitolo(parametri[0]);
+                }
 			
-		case 2:
-			return trovaPerGenere(parametri[0]);
+		case 2 -> {
+                    return trovaPerGenere(parametri[0]);
+                }
 			
-		case 3:
-			return trovaPerDate(Criterio.valueOf(parametri[0]), LocalDate.parse(parametri[1]), LocalDate.parse(parametri[2]));
+		case 3 -> {
+                    return trovaPerDate(Criterio.valueOf(parametri[0]), LocalDate.parse(parametri[1]), LocalDate.parse(parametri[2]));
+                }
 			
-		case 4:
-			return trovaPerCosto(Criterio.valueOf(parametri[0]), Double.parseDouble(parametri[1]), Double.parseDouble(parametri[2]));
+		case 4 -> {
+                    return trovaPerCosto(Criterio.valueOf(parametri[0]), Double.parseDouble(parametri[1]), Double.parseDouble(parametri[2]));
+                }
 			
-		default:
-			System.out.println("Tipo di ricerca non valido!");
-			return new LinkedList<Film>();
+		default -> {
+                    System.out.println("Tipo di ricerca non valido!");
+                    return new LinkedList<>();
+                }
 		}
 	}
 	
 	// Trova una singola proiezione precisa
 	// Usato internamente da GestionePrenotazioni
+	/**
+	 * Cerca una proiezione esatta a partire da titolo, data e ora.
+	 * Restituisce la proiezione corrispondente oppure {@code null}
+	 * se non esiste una corrispondenza completa.
+	 *
+	 * @param titolo titolo del film
+	 * @param data data della proiezione
+	 * @param ora ora della proiezione
+	 * @return la proiezione trovata, o {@code null} se non presente
+	 */
 	public Film trovaProiezione(
 	        String titolo,
 	        LocalDate data,
@@ -218,6 +317,21 @@ public class GestioneFilm {
 	}
 	
 	//Ricerca di un film con i filtri creati prima
+	/**
+	 * Cerca proiezioni applicando filtri combinati su titolo, genere,
+	 * data e costo del biglietto. I criteri vengono concatenati in modo
+	 * da restituire solo le proiezioni che soddisfano tutti i vincoli.
+	 *
+	 * @param titolo parte del titolo da cercare
+	 * @param genere genere del film
+	 * @param criterioDate criterio di selezione delle date
+	 * @param data1 data principale del filtro
+	 * @param data2 data secondaria del filtro date
+	 * @param criterioCosto criterio di selezione del costo
+	 * @param costo1 primo valore del filtro prezzo
+	 * @param costo2 secondo valore del filtro prezzo
+	 * @return elenco delle proiezioni che soddisfano tutti i criteri specificati
+	 */
 	public List<Film> cercaFilm(
 	        String titolo,
 	        String genere,
@@ -282,6 +396,13 @@ public class GestioneFilm {
 	    return risultati;
 	}
 	
+	/**
+	 * Stampa le informazioni principali di una proiezione.
+	 * Include titolo, genere, regista, anno, durata, data/ora, costo
+	 * e posti liberi residui.
+	 *
+	 * @param f proiezione da visualizzare
+	 */
 	public void visualizzaProiezione(Film f) {
 		System.out.println("===== PROIEZIONE =====");
 		System.out.println("Titolo: " + f.getTitolo());
@@ -315,29 +436,31 @@ public class GestioneFilm {
 			
 			//modifica la data
 			case 1:
-				if(parametri[0] instanceof LocalDate) {
-					if(((LocalDate) parametri[0]).isBefore(LocalDate.now()))
+				if(parametri[0] instanceof LocalDate localDate) {
+					if(localDate.isBefore(LocalDate.now()))
 						return false;
-					if(controlloDurata((LocalDate)parametri[0], f.getOra(), f.getDurata())) {
-						f.setData((LocalDate)parametri[0]);
+					if(controlloDurata(localDate, f.getOra(), f.getDurata())) {
+						f.setData(localDate);
 						salvaFilmSuFile();
 						return true;
 					}
 					return false;
 				}
+
 				
 			//modifica l'orario
 			case 2:
-				if(parametri[0] instanceof LocalTime) {
-					if(((LocalTime)parametri[0]).isBefore(LocalTime.now()))
+				if(parametri[0] instanceof LocalTime localTime) {
+					if(localTime.isBefore(LocalTime.now()))
 						return false;
-					if(controlloDurata(f.getData(), (LocalTime)parametri[0], f.getDurata())){
-						f.setOra((LocalTime)parametri[0]);
+					if(controlloDurata(f.getData(), localTime, f.getDurata())){
+						f.setOra(localTime);
 						salvaFilmSuFile();
 						return true;
 					}
 					return false;
 				}
+
 			
 			default:
 				System.out.println("Tipo di ricerca non valido! ");

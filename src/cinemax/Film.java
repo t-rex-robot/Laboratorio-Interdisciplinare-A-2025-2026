@@ -3,22 +3,23 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 /**
- * Rappresenta un film programmato in sala, con informazioni di programmazione,
- * dettagli di produzione, limiti di età e disponibilità dei posti.
+ * Rappresenta un film programmato in sala, con data e ora della proiezione,
+ * i dettagli di produzione, i limiti di età e i posti disponibili.
  */
+
 public class Film {
 	//Attributi del film
 	private LocalDate data;
     private LocalTime ora;
-    private String titolo;
-    private String genere;
-    private String regista;
-    private int anno;
-    private int durata;
-    private int etaMinima;
+    private final String titolo;
+    private final String genere;
+    private final String regista;
+    private final int anno;
+    private final int durata;
+    private final int etaMinima;
     private double costoBiglietto;
     private int postiSala;
-    private String chiave;
+    private final String chiave;
     
     //capienza massima in sala
     public static final int capienza_max = 200;

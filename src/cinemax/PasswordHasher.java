@@ -6,16 +6,16 @@ import java.util.Scanner;
 
 
 /**
- * Fornisce utilità per generare hash SHA-256 di password in chiaro.
- * Usa SHA-256 per ottenere una rappresentazione esadecimale sicura della password.
- * Si tratta di hashing unidirezionale, non di crittografia reversibile.
+ * Fornisce funzioni per generare l'hash SHA-256 di una password in chiaro.
+ * Converte il testo in una rappresentazione esadecimale sicura tramite
+ * un processo di hashing unidirezionale (non invertibile).
  *
  * @see java.security.MessageDigest
  */
 public class PasswordHasher {
 
     /**
-     * Costruttore privato per impedire l'instanziazione della classe di utilità.
+     * Costruttore privato per impedire l'istanziazione della classe di utilità.
      */
     private PasswordHasher() {
     }
