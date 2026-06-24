@@ -3,8 +3,11 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
-import java.util.UUID;
 
+/**
+ * Gestisce le prenotazioni degli utenti: caricamento/salvataggio su file,
+ * creazione, ricerca, modifica ed eliminazione delle prenotazioni.
+ */
 public class GestionePrenotazioni {
 
     // Mappa: con chiave = codice prenotazione e valore = oggetto Prenotazione
@@ -23,8 +26,11 @@ public class GestionePrenotazioni {
         mappaPrenotazioni = new HashMap<>();
     }
     
-    //Carico dal file csv nella mappa  le prenotazioni
-    
+    /**
+     * Carica le prenotazioni dal file CSV in `PATH` e popola la mappa interna.
+     *
+     * @throws FormatoDatiNonValidoException se una riga del file non rispetta il formato previsto
+     */
     public void caricaPrenotazioniDaFile() throws FormatoDatiNonValidoException {
 
         try (BufferedReader br = new BufferedReader(new FileReader(PATH))) {
@@ -65,8 +71,9 @@ public class GestionePrenotazioni {
         }
     }
     
-    //Carica dalla mappa e salva nel file csv
-    
+    /**
+     * Salva tutte le prenotazioni correnti sul file CSV, sovrascrivendo il contenuto.
+     */
     public void salvaPrenotazioniSuFile() {
     	
     	//Uso filewriter(PATH) perche riscreve tutto per evitare dubplicati e tenere lo stato aggiornato
@@ -91,14 +98,21 @@ public class GestionePrenotazioni {
     }
     
     //Genera il codice univoco per la prenotazione tramite un randomizzatore
-    
+
     private String generaCodicePrenotazione() {
 
     	return UUID.randomUUID().toString();
     }
     
-    //Creazione delle prenotazioni
-    
+    /**
+     * Crea una nuova prenotazione per l'utente e aggiorna i posti del film.
+     * Genera un codice univoco e persiste la prenotazione su file.
+     *
+     * @param utente oggetto `Utente` che effettua la prenotazione
+     * @param film oggetto `Film` relativo alla proiezione
+     * @param numeroBiglietti numero di biglietti richiesti
+     * @return true se la prenotazione è stata creata con successo, false altrimenti
+     */
     public boolean creaPrenotazione(Utente utente, Film film, int numeroBiglietti) {
 
 		// controllo numero valido
@@ -131,8 +145,12 @@ public class GestionePrenotazioni {
 		return true;
 		}
     
-    //Ricerca per codice prenotazione
-    
+    /**
+     * Cerca una prenotazione per codice.
+     *
+     * @param codice codice della prenotazione
+     * @return l'oggetto `Prenotazione` se trovato, altrimenti null
+     */
     public Prenotazione cercaPerCodice(String codice) {
 
         if (mappaPrenotazioni.containsKey(codice)) {
@@ -143,8 +161,12 @@ public class GestionePrenotazioni {
         return null;
     }
     
-    //Ricerca per Utente (restituisco una lista perchè l'utente ha più di una prenotazione)
-    
+    /**
+     * Restituisce tutte le prenotazioni associate a uno username.
+     *
+     * @param username username dell'utente
+     * @return lista di prenotazioni dell'utente
+     */
     public List<Prenotazione> cercaPerUtente(String username) {
 
         List<Prenotazione> risultato = new ArrayList<>();
@@ -159,8 +181,12 @@ public class GestionePrenotazioni {
         return risultato;
     }
     
-    //Ricerca per titolo film parziale (lista)
-    
+    /**
+     * Cerca prenotazioni il cui titolo del film contiene la stringa fornita.
+     *
+     * @param titolo sottostringa del titolo da cercare
+     * @return lista di prenotazioni corrispondenti
+     */
     public List<Prenotazione> cercaPerFilm(String titolo) {
 
         List<Prenotazione> risultato = new ArrayList<>();
@@ -176,8 +202,13 @@ public class GestionePrenotazioni {
         return risultato;
     }
     
-    //Ricerca per intervallo di date (listone)
-    
+    /**
+     * Restituisce le prenotazioni la cui data di proiezione rientra nell'intervallo fornito.
+     *
+     * @param inizio data di inizio (inclusa)
+     * @param fine data di fine (inclusa)
+     * @return lista di prenotazioni nell'intervallo
+     */
     public List<Prenotazione> cercaPerIntervalloDate(LocalDate inizio, LocalDate fine) {
 
 		List<Prenotazione> risultato = new ArrayList<>();
@@ -195,8 +226,13 @@ public class GestionePrenotazioni {
 		return risultato;
 	}
     
-    //Metodo che riicerca la Prenotazione
-    
+    /**
+     * Interfaccia di ricerca per le prenotazioni: per codice, utente, film o intervallo date.
+     *
+     * @param tipoRicerca 1=codice,2=utente,3=film,4=intervallo date
+     * @param parametri parametri variabili a seconda del tipo di ricerca
+     * @return lista di prenotazioni risultato della ricerca
+     */
     public List<Prenotazione> cercaPrenotazione(int tipoRicerca, String... parametri) {
 
         switch (tipoRicerca) {
@@ -226,8 +262,11 @@ public class GestionePrenotazioni {
         }
     }
     
-    //Visualizza le prenotazioni (da rivedere non sono convinto mostri tutto bene, dovrei fare un ciclo poi per più prenotazioni?)
-    
+    /**
+     * Stampa a terminale i dettagli di una prenotazione.
+     *
+     * @param p oggetto `Prenotazione` da visualizzare
+     */
     public void visualizzaPrenotazione(Prenotazione p) {
 
         System.out.println("===== PRENOTAZIONE =====");
@@ -242,8 +281,13 @@ public class GestionePrenotazioni {
         System.out.println("Totale: " + totale);
     }
     
-    //Meotodo che elimina le prenotazioni (Va sistemata la ricerca del film)
-    
+    /**
+     * Elimina una prenotazione se la proiezione non è ancora avvenuta.
+     * Ripristina i posti sul film associato e aggiorna il file.
+     *
+     * @param codice codice della prenotazione da eliminare
+     * @return true se l'eliminazione è riuscita, false altrimenti
+     */
     public boolean eliminaPrenotazione(String codice) {
 
         Prenotazione p = mappaPrenotazioni.get(codice);
@@ -275,8 +319,13 @@ public class GestionePrenotazioni {
         return true;
     }
     
-    //Metodo per modificare le prenotazioni (stesso problema ricerca film)
-    
+    /**
+     * Modifica il numero di biglietti di una prenotazione futura, adeguando i posti del film.
+     *
+     * @param codice codice della prenotazione
+     * @param nuoviBiglietti nuovo numero di biglietti richiesto
+     * @return true se la modifica è stata applicata, false altrimenti
+     */
     public boolean modificaPrenotazione(String codice, int nuoviBiglietti) {
 
         Prenotazione p = mappaPrenotazioni.get(codice);
@@ -330,7 +379,11 @@ public class GestionePrenotazioni {
         return true;
     }
     
-    //Metodo che restituisce le prenotazioni di oggi
+    /**
+     * Restituisce le prenotazioni la cui data di proiezione è oggi.
+     *
+     * @return lista di prenotazioni per la data odierna
+     */
     public List<Prenotazione> prenotazioniOggi() {
 
         List<Prenotazione> risultato = new ArrayList<>();
