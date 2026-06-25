@@ -142,5 +142,9 @@ public class GestioneUtenti {
 			System.out.println(u);
 		}
 	}
+	
+	public Utente getUtenteCorrente() {
+	    return utenteCorrente;
+	}
 
 }

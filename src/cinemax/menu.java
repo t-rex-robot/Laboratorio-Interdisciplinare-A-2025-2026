@@ -134,7 +134,35 @@ public class menu {
     // Login 
     private void login() {
 
-        System.out.println("\n--- LOGIN ---");
+    	    System.out.println("\n--- LOGIN ---");
+
+    	    System.out.print("Username: ");
+    	    String username = scanner.nextLine();
+
+    	    System.out.print("Password: ");
+    	    String password = scanner.nextLine();
+
+    	    boolean successo =
+    	            gestioneUtenti.loginHashed(username, password);
+
+    	    if (successo) {
+
+    	        utenteLoggato =
+    	                gestioneUtenti.getUtenteCorrente();
+
+    	        System.out.println(
+    	                "Benvenuto " +
+    	                utenteLoggato.getUsername()
+    	        );
+
+    	        // entra subito nel menu corretto
+    	        menuRuolo();
+
+    	    } else {
+
+    	        System.out.println("Login fallito.");
+    	   
+    	}
 
     }
 
