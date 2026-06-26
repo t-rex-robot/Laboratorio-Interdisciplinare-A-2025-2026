@@ -65,6 +65,23 @@ public class PasswordHasher {
         System.out.println(passwordOK ? "La password corrisponde al valore memorizzato." : "La password NON corrisponde.");
 
 
+
+        // Convertitore di password in hash
+        while (true) {
+            System.out.println("\nInserisci una password da convertire (premi INVIO a vuoto per uscire):");
+            String pw = sc.nextLine();
+
+            // Se la stringa è vuota, il processo termina
+            if (pw.isEmpty()) {
+                System.out.println("Processo terminato.");
+                break; 
+            }
+
+            String hashedPassword = hashPassword(pw);
+            System.out.println("Hash della password inserita: " + hashedPassword);
+        }
+
+
         // Esempio diretto di hashing di una password
         String realPassword = "password123";
         String storedHash = hashPassword(realPassword);
