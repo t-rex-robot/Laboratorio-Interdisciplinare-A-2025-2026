@@ -114,25 +114,37 @@ public class GestioneUtenti {
 	 * @param d domicilio del cliente
 	 * @return true se la registrazione ha avuto successo, false altrimenti
 	 */
+	
 	public boolean registraCliente(String n, String c, String us, String p, LocalDate dn, String d) {
 		if (mappaUtenti.containsKey(us)) {
 			System.out.print("Username non disponibile! ");
 			return false;
 		}
-		Utente u = new Utente(n, c, us, p, dn, d);
+
+		String hashedPassword;
+		try {
+			// 1. Converte la password in chiaro ricevuta in input in un hash SHA-256
+			hashedPassword = PasswordHasher.hashPassword(p);
+		} catch (java.security.NoSuchAlgorithmException e) {
+			System.err.println("Errore di configurazione della sicurezza: " + e.getMessage());
+			return false;
+		}
+
+		// 2. Passa la password hashata (e non quella in chiaro 'p') al costruttore
+		Utente u = new Utente(n, c, us, hashedPassword, dn, d);
 		mappaUtenti.put(u.getUsername(), u);
-			try (BufferedWriter bw = new BufferedWriter(new FileWriter(PATH, true))){
+			try (BufferedWriter bw = new BufferedWriter(new FileWriter(PATH, true))) {
 				String utente = u.toCSV();
 				bw.write(utente);
 				bw.newLine();
 				System.out.println("Utente registrato correttamente! ");
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				System.err.println("Errore nella registrazione " + e.getMessage());
 				return false;
 			}
-		return true;
-	}
+			return true;
+		}
+
 	
 	/**
 	 * Stampa tutti gli utenti attualmente caricati nella mappa.
