@@ -80,8 +80,16 @@ public class GestioneFilm {
 		for(Film f : mappaFilm.values()) {
 			if(f.getData().equals(data)) {
 				if(f.getOra().isBefore(ora)) {
-					if(ChronoUnit.MINUTES.between(f.getOra(), ora)<f.getDurata()) {System.out.println("Orario non disponibile, la seguente proiezione è acnora in corso "+"\n"+f.toString() ); return false;}
-				}else if(ChronoUnit.MINUTES.between(ora, f.getOra())<durata) {System.out.println("Orario non disponibile, durata del film non compatibile con l'orario della proiezione successiva"+"\n"+f.toString()); return false;}
+					if(ChronoUnit.MINUTES.between(f.getOra(), ora)<f.getDurata()) {
+						System.out.println("Orario non disponibile, la seguente proiezione è acnora in corso "+"\n"+f.toString() ); 
+						return false;
+					}
+				}else {
+					if(ChronoUnit.MINUTES.between(ora, f.getOra())<durata) {
+						System.out.println("Orario non disponibile, durata del film non compatibile con l'orario della proiezione successiva"+"\n"+f.toString()); 
+						return false;
+					}
+				}
 			}
 		}
 		return true;
@@ -440,7 +448,9 @@ public class GestioneFilm {
 					if(localDate.isBefore(LocalDate.now()))
 						return false;
 					if(controlloDurata(localDate, f.getOra(), f.getDurata())) {
+						mappaFilm.remove(f.getChiave());
 						f.setData(localDate);
+						mappaFilm.put(f.getChiave(), f);
 						salvaFilmSuFile();
 						return true;
 					}
@@ -451,10 +461,10 @@ public class GestioneFilm {
 			//modifica l'orario
 			case 2:
 				if(parametri[0] instanceof LocalTime localTime) {
-					if(localTime.isBefore(LocalTime.now()))
-						return false;
 					if(controlloDurata(f.getData(), localTime, f.getDurata())){
+						mappaFilm.remove(f.getChiave());
 						f.setOra(localTime);
+						mappaFilm.put(f.getChiave(), f);
 						salvaFilmSuFile();
 						return true;
 					}
