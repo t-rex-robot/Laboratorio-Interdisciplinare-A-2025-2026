@@ -80,8 +80,8 @@ public class GestioneFilm {
 		for(Film f : mappaFilm.values()) {
 			if(f.getData().equals(data)) {
 				if(f.getOra().isBefore(ora)) {
-					if(ChronoUnit.MINUTES.between(f.getOra(), ora)<f.getDurata()) {System.out.println("Orario non disponibile, proiezione precedente acnora in corso"); return false;}
-				}else if(ChronoUnit.MINUTES.between(ora, f.getOra())<durata) {System.out.println("Orario non disponibile, durata del film non compatibile con l'orario della proiezione successiva"); return false;}
+					if(ChronoUnit.MINUTES.between(f.getOra(), ora)<f.getDurata()) {System.out.println("Orario non disponibile, la seguente proiezione è acnora in corso "+"\n"+f.toString() ); return false;}
+				}else if(ChronoUnit.MINUTES.between(ora, f.getOra())<durata) {System.out.println("Orario non disponibile, durata del film non compatibile con l'orario della proiezione successiva"+"\n"+f.toString()); return false;}
 			}
 		}
 		return true;

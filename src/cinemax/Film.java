@@ -140,19 +140,18 @@ public class Film {
         return false;
     }
     
-  //scrive l'oggetto Film già in formato corretto per il file utenti.csv
-    
     /**
      * Restituisce la rappresentazione CSV del film.
      *
      * @return stringa CSV con i campi del film
      */
     public String toCSV() {
-        return titolo + "," + genere + "," + regista + "," + anno + "," + durata + "," + etaMinima + "," + data + "," + ora + "," + costoBiglietto + "," + postiSala;
+        return data + "," + ora + "," + titolo + "," + genere + "," + regista + "," + anno + "," + durata + "," + etaMinima + "," + costoBiglietto;
     }
     
     @Override
     public String toString() {
-        return "Titolo: " + titolo + "\nGenere: " + genere + "\nRegista: " + regista + "\nAnno: " + anno + "\nDurata: " + durata + "\nEtà minima: " + etaMinima + "\nData: " + data + "\nOra: " + ora + "\nCosto: " + costoBiglietto + "\nPosti disponibili: " + postiSala;
-    }
-}
+        return "Titolo: " + titolo + "\nGenere: " + genere + "\nRegista: " + regista +  "\nDurata: " + durata + "\nData: " + data + "\nOra: " + ora ;
+   } 
+ }
+
