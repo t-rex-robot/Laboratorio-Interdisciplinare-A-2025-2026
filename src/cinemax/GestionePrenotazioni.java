@@ -124,6 +124,15 @@ public class GestionePrenotazioni {
 		return false;
 		}
 		
+		  // controllo data 
+	    LocalDate oggi = LocalDate.now();
+
+	    if (film.getData().isBefore(oggi)) {
+	        System.out.println("Non puoi prenotare per una data passata!");
+	        return false;
+	    }
+
+		
 		// controllo posti disponibili
 		if (film.getPostiSala() < numeroBiglietti) {
 		
