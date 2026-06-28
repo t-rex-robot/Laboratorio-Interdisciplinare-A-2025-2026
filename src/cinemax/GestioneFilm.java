@@ -125,7 +125,7 @@ public class GestioneFilm {
 		}
 		//controlla che la durata del nuovo film non si sovrapponga ad altre proiezioni nello stesso giorno
 		if(controlloDurata(data, ora, durata)) {
-			Film f = new Film(data, ora, titolo, genere, regista, anno, durata, etaMinima, costoBiglietto);
+			Film f = new Film(data, ora, titolo.trim(), genere.trim(), regista.trim(), anno, durata, etaMinima, costoBiglietto);
 			mappaFilm.put(f.getChiave(), f);
 			try(BufferedWriter bw = new BufferedWriter(new FileWriter(PATH, true))){
 				String film = f.toCSV();
@@ -166,7 +166,7 @@ public class GestioneFilm {
 	public LinkedList<Film> trovaPerGenere(String g){
 		LinkedList<Film> l = new LinkedList<>();
 		for (Film f : mappaFilm.values()) {
-			if (f.getGenere().equalsIgnoreCase(g))
+			if (f.getGenere().equalsIgnoreCase(g.trim()))
 				l.add(f);
 		}
 		return l;
