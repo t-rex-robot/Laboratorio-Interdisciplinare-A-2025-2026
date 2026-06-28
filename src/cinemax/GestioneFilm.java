@@ -76,12 +76,12 @@ public class GestioneFilm {
 	 * @param durata durata in minuti della nuova proiezione
 	 * @return true se la nuova proiezione non si sovrappone ad altre proiezioni
 	 */
-	public boolean controlloDurata(LocalDate data, LocalTime ora, int durata) {
+	public boolean controlloDurata(LocalDate data, LocalTime ora, int durata, String chiave) {
 		for(Film f : mappaFilm.values()) {
-			if(f.getData().equals(data)) {
+			if(f.getData().equals(data) && f.getChiave()!=chiave) {
 				if(f.getOra().isBefore(ora)) {
 					if(ChronoUnit.MINUTES.between(f.getOra(), ora)<f.getDurata()) {
-						System.out.println("Orario non disponibile, la seguente proiezione è acnora in corso "+"\n"+f.toString() ); 
+						System.out.println("Orario non disponibile, la seguente proiezione è ancora in corso "+"\n"+f.toString() ); 
 						return false;
 					}
 				}else {
@@ -124,7 +124,8 @@ public class GestioneFilm {
 			throw new FilmException("Esiste già una proiezione per la stessa data e ora");
 		}
 		//controlla che la durata del nuovo film non si sovrapponga ad altre proiezioni nello stesso giorno
-		if(controlloDurata(data, ora, durata)) {
+		String chiaveProvvisoria = "";
+		if(controlloDurata(data, ora, durata, chiaveProvvisoria)) {
 			Film f = new Film(data, ora, titolo.trim(), genere.trim(), regista.trim(), anno, durata, etaMinima, costoBiglietto);
 			mappaFilm.put(f.getChiave(), f);
 			try(BufferedWriter bw = new BufferedWriter(new FileWriter(PATH, true))){
@@ -440,6 +441,7 @@ public class GestioneFilm {
 	
 	public boolean modificaProiezione(Film f, int tipoModifica, Object ...parametri) {
 		if (f.getPostiSala()==Film.capienza_max) {
+			String chiave = f.getChiave();
 			switch(tipoModifica) {
 			
 			//modifica la data
@@ -447,7 +449,7 @@ public class GestioneFilm {
 				if(parametri[0] instanceof LocalDate localDate) {
 					if(localDate.isBefore(LocalDate.now()))
 						return false;
-					if(controlloDurata(localDate, f.getOra(), f.getDurata())) {
+					if(controlloDurata(localDate, f.getOra(), f.getDurata(), chiave)) {
 						mappaFilm.remove(f.getChiave());
 						f.setData(localDate);
 						mappaFilm.put(f.getChiave(), f);
@@ -456,12 +458,13 @@ public class GestioneFilm {
 					}
 					return false;
 				}
+				return false;
 
 				
 			//modifica l'orario
 			case 2:
 				if(parametri[0] instanceof LocalTime localTime) {
-					if(controlloDurata(f.getData(), localTime, f.getDurata())){
+					if(controlloDurata(f.getData(), localTime, f.getDurata(), chiave)){
 						mappaFilm.remove(f.getChiave());
 						f.setOra(localTime);
 						mappaFilm.put(f.getChiave(), f);
@@ -470,6 +473,7 @@ public class GestioneFilm {
 					}
 					return false;
 				}
+				return false;
 
 			
 			default:
