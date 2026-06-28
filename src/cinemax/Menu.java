@@ -295,8 +295,8 @@ public class Menu {
 				
 				 GestioneFilm.Criterio critCosto = null;
 				
-				 Double costo1 = null;
-				 Double costo2 = null;
+				 double costo1 = 0.0;
+				 double costo2 = 0.0;
 				
 				 if (sceltaCosto > 0) {
 				
