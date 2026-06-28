@@ -74,11 +74,12 @@ public class GestioneFilm {
 	 * @param data data della nuova proiezione
 	 * @param ora ora della nuova proiezione 
 	 * @param durata durata in minuti della nuova proiezione
+	 * @param chiave chiave della proiezione, usato per escludere se stesso dal controllo in caso di modifica
 	 * @return true se la nuova proiezione non si sovrappone ad altre proiezioni
 	 */
 	public boolean controlloDurata(LocalDate data, LocalTime ora, int durata, String chiave) {
 		for(Film f : mappaFilm.values()) {
-			if(f.getData().equals(data) && f.getChiave()!=chiave) {
+			if(f.getData().equals(data) && !f.getChiave().equals(chiave)) {
 				if(f.getOra().isBefore(ora)) {
 					if(ChronoUnit.MINUTES.between(f.getOra(), ora)<f.getDurata()) {
 						System.out.println("Orario non disponibile, la seguente proiezione è ancora in corso "+"\n"+f.toString() ); 
@@ -96,7 +97,7 @@ public class GestioneFilm {
 	}
 	
 	/**
-	 * Crea una nuova proiezione e la salu file.
+	 * Crea una nuova proiezione e la salva su file.
  	 * Il metodo verifica la validità della data, il limite di età minima e 
 	 * controlla che non ci siano sovrapposizioni con altre proiezioni già programmate.
 	 *
@@ -423,6 +424,14 @@ public class GestioneFilm {
 		System.out.println("Posti liberi: " + f.getPostiSala());
 	}
 	
+	/**
+	 * Elimina una proiezione se non ci sono prenotazioni attive.
+	 * Controlla che la proiezione esista e che non siano stati prenotati posti (posti liberi = capienza massima).
+	 * Aggiorna il file CSV dopo la rimozione.
+	 * 
+	 * @param f proiezione da eliminare
+	 * @return true se la proiezione è stata eliminata con successo, false altrimenti
+	 */
 	public boolean eliminaProiezione(Film f) {
 		if(!mappaFilm.containsKey(f.getChiave())) {
 			System.out.println("Proiezione non esistente");
@@ -439,6 +448,17 @@ public class GestioneFilm {
 		return false;
 	}
 	
+
+	/**
+	 * Modifica la data o l'orario di una proiezione se non ci sono prenotazioni attive.
+	 * Controlla che la proiezione esista e che non siano stati prenotati posti (posti liberi = capienza massima).
+	 * Aggiorna il file CSV dopo la modifica.
+	 * 
+	 * @param f proiezione da modificare
+	 * @param tipoModifica 1 per modificare la data, 2 per modificare l'orario
+	 * @param parametri parametri della modifica (LocalDate per data, LocalTime per orario)
+	 * @return true se la modifica è stata effettuata con successo, false altrimenti
+	 */
 	public boolean modificaProiezione(Film f, int tipoModifica, Object ...parametri) {
 		if (f.getPostiSala()==Film.capienza_max) {
 			String chiave = f.getChiave();
