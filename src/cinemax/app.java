@@ -27,7 +27,7 @@ public class app {
 
 	            // CREAZIONE MENU
 
-	            menu menu = new menu(gestioneFilm, gestioneUtenti, gestionePrenotazioni);
+	            Menu menu = new Menu(gestioneFilm, gestioneUtenti, gestionePrenotazioni);
 
 	            // AVVIO PROGRAMMA
 

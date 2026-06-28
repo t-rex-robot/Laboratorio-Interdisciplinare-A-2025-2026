@@ -4,7 +4,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Scanner;
 
-public class menu {
+public class Menu {
 
     // Scanner per leggere input utente
     private final Scanner scanner;
@@ -22,7 +22,7 @@ public class menu {
      * @param gestioneUtenti gestore degli utenti
      * @param gestionePrenotazioni gestore delle prenotazioni
      */
-    public menu(GestioneFilm gestioneFilm, GestioneUtenti gestioneUtenti,GestionePrenotazioni gestionePrenotazioni) {
+    public Menu(GestioneFilm gestioneFilm, GestioneUtenti gestioneUtenti,GestionePrenotazioni gestionePrenotazioni) {
 
         this.scanner = new Scanner(System.in);
 
@@ -541,51 +541,22 @@ public class menu {
 
                 break;
             case "2":
-            	System.out.println("Cerca per:");
-            	System.out.println("1. Username");
-            	System.out.println("2. Nome e Cognome");
-            	System.out.println("3. Username + Nome e Cognome");
 
-            	String tipo = scanner.nextLine();
+            	System.out.print("Inserisci username: ");
+            	String username = scanner.nextLine();
 
-            	List<Prenotazione> risultati;
+            	List<Prenotazione> risultati =
+            	        gestionePrenotazioni.cercaPrenotazione(2, username);
 
-            	switch (tipo) {
-
-            	    case "1":
-            	        System.out.print("Inserisci username: ");
-            	        String username = scanner.nextLine();
-
-            	        risultati = gestionePrenotazioni.cercaPrenotazione(2, username);
-            	        break;
-
-            	    case "2":
-            	        System.out.print("Inserisci nome: ");
-            	        String nome = scanner.nextLine();
-
-            	        System.out.print("Inserisci cognome: ");
-            	        String cognome = scanner.nextLine();
-
-            	        risultati = gestionePrenotazioni.cercaPrenotazione(3, nome, cognome);
-            	        break;
-
-            	    case "3":
-            	        System.out.print("Inserisci username: ");
-            	        String user = scanner.nextLine();
-
-            	        System.out.print("Inserisci nome: ");
-            	        String nomeU = scanner.nextLine();
-
-            	        System.out.print("Inserisci cognome: ");
-            	        String cognomeU = scanner.nextLine();
-
-            	        risultati = gestionePrenotazioni.cercaPrenotazione(2, user, nomeU, cognomeU);
-            	        break;
-
-            	    default:
-            	        System.out.println("Scelta non valida.");
-            	        return;
+            	if (risultati != null && !risultati.isEmpty()) {
+            	    for (Prenotazione p : risultati) {
+            	        gestionePrenotazioni.visualizzaPrenotazione(p);
+            	    }
+            	} else {
+            	    System.out.println("Nessuna prenotazione trovata.");
             	}
+            	
+                break;
 
             case "3":
                 gestioneUtenti.logout();
@@ -616,7 +587,7 @@ public class menu {
         System.out.println("1. Aggiungi proiezione");
         System.out.println("2. Modifica proiezione");
         System.out.println("3. Elimina proiezione");
-        System.out.println("3. Visualizza proiezioni");
+        System.out.println("4. Visualizza proiezioni");
         System.out.println("5. Logout");
         System.out.println("6. Chiudi programma");
 
@@ -696,10 +667,8 @@ public class menu {
 
             	// scelta modifica
             	System.out.println("\nCosa vuoi modificare?");
-            	System.out.println("1. Solo data");
-            	System.out.println("2. Solo ora");
-            	System.out.println("3. Data e ora");
-
+            	System.out.println("1. Modifica data");
+            	System.out.println("2. Modifica ora");
             	String sceltaModifica = scanner.nextLine();
 
             	switch (sceltaModifica) {
@@ -723,22 +692,7 @@ public class menu {
 
             	        System.out.println("Ora modificata!");
             	        break;
-
-            	    case "3":
-
-            	        System.out.print("Nuova data (AAAA-MM-GG): ");
-            	        LocalDate dataNuova = LocalDate.parse(scanner.nextLine());
-
-            	        System.out.print("Nuova ora (HH:MM): ");
-            	        LocalTime oraNuova = LocalTime.parse(scanner.nextLine());
-
-            	        gestioneFilm.modificaProiezione(f,1,dataNuova);
-
-            	        gestioneFilm.modificaProiezione(f,2,oraNuova);
-
-            	        System.out.println("Proiezione modificata!");
-            	        break;
-
+            	        
             	    default:
             	        System.out.println("Scelta non valida.");
             	}
