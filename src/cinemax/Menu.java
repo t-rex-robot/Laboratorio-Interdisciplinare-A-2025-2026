@@ -284,55 +284,49 @@ public class Menu {
 
             // COSTO
             System.out.println("""
-                               
-                               Filtro costo:
-                               0 Nessuno
-                               1 Maggiore di
-                               2 Minore di
-                               3 Tra""");
+                    
+                    Filtro costo:
+                    0 Nessuno
+                    1 Maggiore di
+                    2 Minore di
+                    3 Tra""");
 
-            int sceltaCosto =
-                    Integer.parseInt(
-                            sc.nextLine()
-                    );
-
-            GestioneFilm.Criterio critCosto = null;
-
-            Double costo1 = null;
-            Double costo2 = null;
-
-            if (sceltaCosto > 0) {
-
-                System.out.print("Costo: ");
-
-                costo1 =
-                        Double.parseDouble(
-                                sc.nextLine()
-                        );
-
-                switch (sceltaCosto) {
-
-                    case 1 -> critCosto =
-                                GestioneFilm.Criterio.DOPO_DI;
-
-                    case 2 -> critCosto =
-                                GestioneFilm.Criterio.PRIMA_DI;
-
-                    case 3 -> {
-                        critCosto =
-                                GestioneFilm.Criterio.COMPRESO_TRA;
-
-                        System.out.print(
-                                "Secondo costo: "
-                        );
-
-                        costo2 =
-                                Double.parseDouble(
-                                        sc.nextLine()
-                                );
-                    }
-                }
-            }
+				 int sceltaCosto = Integer.parseInt(sc.nextLine());
+				
+				 GestioneFilm.Criterio critCosto = null;
+				
+				 Double costo1 = null;
+				 Double costo2 = null;
+				
+				 if (sceltaCosto > 0) {
+				
+				     switch (sceltaCosto) {
+				
+				         case 1 -> {
+				             critCosto = GestioneFilm.Criterio.DOPO_DI;
+				             System.out.print("Costo minimo: ");
+				             costo1 = Double.parseDouble(sc.nextLine());
+				         }
+				
+				         case 2 -> {
+				             critCosto = GestioneFilm.Criterio.PRIMA_DI;
+				             System.out.print("Costo massimo: ");
+				             costo1 = Double.parseDouble(sc.nextLine());
+				         }
+				
+				         case 3 -> {
+				             critCosto = GestioneFilm.Criterio.COMPRESO_TRA;
+				
+				             System.out.print("Costo minimo: ");
+				             costo1 = Double.parseDouble(sc.nextLine());
+				
+				             System.out.print("Costo massimo: ");
+				             costo2 = Double.parseDouble(sc.nextLine());
+				         }
+				
+				         default -> System.out.println("Scelta non valida");
+				     }
+				 }
 
             filmList =
                     gestioneFilm.cercaFilm(
