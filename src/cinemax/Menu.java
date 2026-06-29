@@ -204,7 +204,7 @@ public class Menu {
 
         } else {
 
-            System.out.println("\nRegistrazione fallita (username già esistente o errore).");
+            System.out.println("\nRegistrazione fallita");
         }
 
 
