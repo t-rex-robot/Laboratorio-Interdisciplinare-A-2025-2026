@@ -153,7 +153,6 @@ public class GestionePrenotazioni {
 		mappaPrenotazioni.put( p.getCodicePrenotazione(), p);
 		
 		salvaPrenotazioniSuFile();
-		System.out.println("Prenotazione creata!");
 		
 		return true;
 		}
