@@ -130,6 +130,11 @@ public class GestionePrenotazioni {
 	    if (film.getData().isBefore(oggi)) {
 	        System.out.println("Non puoi prenotare per una data passata!");
 	        return false;
+	    }else {
+	    	if(film.getData().equals(oggi) && film.getOra().isBefore(LocalTime.now())) {
+	    		System.out.println("La proiezione è già avvenuta o è in corso!");
+	    		return false;
+	    	}
 	    }
 
 		
@@ -317,7 +322,7 @@ public class GestionePrenotazioni {
         }
 
         // controllo data
-        if (p.getDataProiezione().isBefore(LocalDate.now())) {
+        if (p.getDataProiezione().isBefore(LocalDate.now()) || (p.getDataProiezione().equals(LocalDate.now()) && p.getOraProiezione().isBefore(LocalTime.now()))) {
             System.out.println("Impossibile eliminare: proiezione già avvenuta");
             return false;
         }
@@ -357,7 +362,7 @@ public class GestionePrenotazioni {
         }
 
         // controllo data (solo futuro)
-        if (p.getDataProiezione().isBefore(LocalDate.now())) {
+        if (p.getDataProiezione().isBefore(LocalDate.now()) || (p.getDataProiezione().equals(LocalDate.now()) && p.getOraProiezione().isBefore(LocalTime.now()))) {
             System.out.println("Impossibile modificare una proiezione passata");
             return false;
         }
