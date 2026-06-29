@@ -1,4 +1,5 @@
 package cinemax;
+import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -536,21 +537,66 @@ public class Menu {
                 break;
             case "2":
 
-            	System.out.print("Inserisci username: ");
-            	String username = scanner.nextLine();
+            	System.out.println("""
+            			Scegli tipo ricerca:
+            			1 - Codice prenotazione
+            			2 - Username
+            			3 - Titolo film
+            			4 - Intervallo date
+            			""");
 
-            	List<Prenotazione> risultati =
-            	        gestionePrenotazioni.cercaPrenotazione(2, username);
+            			int tipo = Integer.parseInt(scanner.nextLine());
 
-            	if (risultati != null && !risultati.isEmpty()) {
-            	    for (Prenotazione p : risultati) {
-            	        gestionePrenotazioni.visualizzaPrenotazione(p);
-            	    }
-            	} else {
-            	    System.out.println("Nessuna prenotazione trovata.");
-            	}
-            	
-                break;
+            			List<Prenotazione> risultati = new ArrayList<>();
+
+            			switch (tipo) {
+
+            			    case 1:
+            			        System.out.print("Inserisci codice prenotazione: ");
+            			        String codice = scanner.nextLine();
+
+            			        risultati = gestionePrenotazioni.cercaPrenotazione(1, codice);
+            			        break;
+
+            			    case 2:
+            			        System.out.print("Inserisci username: ");
+            			        String username = scanner.nextLine();
+
+            			        risultati = gestionePrenotazioni.cercaPrenotazione(2, username);
+            			        break;
+
+            			    case 3:
+            			        System.out.print("Inserisci titolo film: ");
+            			        String titolo = scanner.nextLine();
+
+            			        risultati = gestionePrenotazioni.cercaPrenotazione(3, titolo);
+            			        break;
+
+            			    case 4:
+            			        System.out.print("Data inizio (YYYY-MM-DD): ");
+            			        String inizio = scanner.nextLine();
+
+            			        System.out.print("Data fine (YYYY-MM-DD): ");
+            			        String fine = scanner.nextLine();
+
+            			        risultati = gestionePrenotazioni.cercaPrenotazione(4, inizio, fine);
+            			        break;
+
+            			    default:
+            			        System.out.println("Scelta non valida");
+            			        break;
+            			}
+
+            			// Visualizzazione risultati
+            			if (!risultati.isEmpty()) {
+
+            			    for (Prenotazione p : risultati) {
+            			        gestionePrenotazioni.visualizzaPrenotazione(p);
+            			    }
+
+            			} else {
+            			    System.out.println("Nessuna prenotazione trovata.");
+            			}
 
             case "3":
                 gestioneUtenti.logout();

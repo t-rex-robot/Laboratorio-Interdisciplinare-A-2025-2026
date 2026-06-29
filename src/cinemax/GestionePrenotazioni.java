@@ -158,6 +158,7 @@ public class GestionePrenotazioni {
 		mappaPrenotazioni.put( p.getCodicePrenotazione(), p);
 		
 		salvaPrenotazioniSuFile();
+		gestioneFilm.salvaFilmSuFile();
 		
 		return true;
 		}
@@ -332,6 +333,7 @@ public class GestionePrenotazioni {
 
         if (film != null) {
             film.aggiungiPosti(p.getNumeroBiglietti());
+            gestioneFilm.salvaFilmSuFile();
         }
 
         
@@ -398,6 +400,8 @@ public class GestionePrenotazioni {
 
         // aggiorna prenotazione
         p.setNumeroBiglietti(nuoviBiglietti);
+        
+        gestioneFilm.salvaFilmSuFile();
 
         salvaPrenotazioniSuFile();
 
