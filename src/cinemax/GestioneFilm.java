@@ -474,6 +474,7 @@ public class GestioneFilm {
 						f.setData(localDate);
 						mappaFilm.put(f.getChiave(), f);
 						salvaFilmSuFile();
+						System.out.println("Data modificata!");
 						return true;
 					}
 					return false;
@@ -489,6 +490,7 @@ public class GestioneFilm {
 						f.setOra(localTime);
 						mappaFilm.put(f.getChiave(), f);
 						salvaFilmSuFile();
+						System.out.println("Orario modificato!");
 						return true;
 					}
 					return false;

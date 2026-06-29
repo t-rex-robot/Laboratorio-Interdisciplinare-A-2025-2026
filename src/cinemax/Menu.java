@@ -674,7 +674,6 @@ public class Menu {
 
             	        gestioneFilm.modificaProiezione(f,1,nuovaData);
 
-            	        System.out.println("Data modificata!");
             	        break;
 
             	    case "2":
@@ -684,7 +683,6 @@ public class Menu {
 
             	        gestioneFilm.modificaProiezione(f,2,nuovaOra);
 
-            	        System.out.println("Ora modificata!");
             	        break;
             	        
             	    default:
