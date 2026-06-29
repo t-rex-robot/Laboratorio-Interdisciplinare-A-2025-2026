@@ -168,7 +168,7 @@ public class GestioneFilm {
 	public LinkedList<Film> trovaPerGenere(String g){
 		LinkedList<Film> l = new LinkedList<>();
 		for (Film f : mappaFilm.values()) {
-			if (f.getGenere().equalsIgnoreCase(g.trim()))
+			if ((f.getGenere().toLowerCase()).contains(g.trim()))
 				l.add(f);
 		}
 		return l;
