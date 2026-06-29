@@ -4,7 +4,7 @@ package cinemax;
  * Classe di avvio dell'applicazione Cinemax. Inizializza i gestori,
  * carica i dati da file e avvia il menu principale.
  */
-public class app {
+public class CineMax {
 
 	public static void main(String[] args) {
 		
