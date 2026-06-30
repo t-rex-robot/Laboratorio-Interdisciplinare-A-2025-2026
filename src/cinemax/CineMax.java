@@ -1,8 +1,7 @@
 package cinemax;
 
 /**
- * Classe di avvio dell'applicazione Cinemax. Inizializza i gestori,
- * carica i dati da file e avvia il menu principale.
+ * Classe di avvio dell'applicazione Cinemax. Carica i dati delle gestioni da file e avvia il menu principale.
  */
 public class CineMax {
 
