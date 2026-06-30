@@ -253,7 +253,7 @@ public class Menu {
 
             if (sceltaData > 0) {
 
-                System.out.print("Data (yyyy-MM-dd): ");
+                System.out.print("Data (YYYY-MM-DD): ");
                 data1 =
                         LocalDate.parse(
                                 sc.nextLine()
@@ -399,7 +399,7 @@ public class Menu {
             	System.out.println("Inserisci titolo film:");
             	String titolo = scanner.nextLine();
 
-            	System.out.println("Inserisci data (yyyy-MM-dd):");
+            	System.out.println("Inserisci data (YYYY-MM-DD):");
             	LocalDate data = LocalDate.parse(scanner.nextLine());
 
             	System.out.println("Inserisci ora (HH:mm):");
@@ -561,8 +561,11 @@ public class Menu {
             			    case 2:
             			        System.out.print("Inserisci username: ");
             			        String username = scanner.nextLine();
-
-            			        risultati = gestionePrenotazioni.cercaPrenotazione(2, username);
+            			        if(gestioneUtenti.utenteEsiste(username)) {
+            			        	risultati = gestionePrenotazioni.cercaPrenotazione(2, username);
+            			        }else {
+            			        	System.out.println("Utente non trovato");
+            			        }
             			        break;
 
             			    case 3:
@@ -578,8 +581,12 @@ public class Menu {
 
             			        System.out.print("Data fine (YYYY-MM-DD): ");
             			        String fine = scanner.nextLine();
-
-            			        risultati = gestionePrenotazioni.cercaPrenotazione(4, inizio, fine);
+            			        
+            			        if(!LocalDate.parse(fine).isBefore(LocalDate.parse(inizio))) {
+            			        	risultati = gestionePrenotazioni.cercaPrenotazione(4, inizio, fine);
+            			        }else {
+            			        	System.out.println("Date non valide");
+            			        }
             			        break;
 
             			    default:
@@ -658,10 +665,10 @@ public class Menu {
             	System.out.print("Età minima: ");
             	int eta = Integer.parseInt(scanner.nextLine());
 
-            	System.out.print("Data (AAAA-MM-GG): ");
+            	System.out.print("Data (YYYY-MM-DD): ");
             	LocalDate data = LocalDate.parse(scanner.nextLine());
 
-            	System.out.print("Ora (HH:MM): ");
+            	System.out.print("Ora (HH:mm): ");
             	LocalTime ora = LocalTime.parse(scanner.nextLine());
 
             	System.out.print("Costo biglietto: ");
@@ -690,10 +697,10 @@ public class Menu {
             	System.out.print("Titolo film: ");
             	String titoloM = scanner.nextLine();
 
-            	System.out.print("Data attuale (AAAA-MM-GG): ");
+            	System.out.print("Data attuale (YYYY-MM-DD): ");
             	LocalDate dataVecchia = LocalDate.parse(scanner.nextLine());
 
-            	System.out.print("Ora attuale (HH:MM): ");
+            	System.out.print("Ora attuale (HH:mm): ");
             	LocalTime oraVecchia = LocalTime.parse(scanner.nextLine());
 
             	Film f = gestioneFilm.trovaProiezione(
@@ -716,7 +723,7 @@ public class Menu {
 
             	    case "1":
 
-            	        System.out.print("Nuova data (AAAA-MM-GG): ");
+            	        System.out.print("Nuova data (YYYY-MM-DD): ");
             	        LocalDate nuovaData = LocalDate.parse(scanner.nextLine());
 
             	        gestioneFilm.modificaProiezione(f,1,nuovaData);
@@ -725,7 +732,7 @@ public class Menu {
 
             	    case "2":
 
-            	        System.out.print("Nuova ora (HH:MM): ");
+            	        System.out.print("Nuova ora (HH:mm): ");
             	        LocalTime nuovaOra =LocalTime.parse(scanner.nextLine());
 
             	        gestioneFilm.modificaProiezione(f,2,nuovaOra);
@@ -741,10 +748,10 @@ public class Menu {
             	System.out.print("Titolo film: ");
             	String titoloE = scanner.nextLine();
 
-            	System.out.print("Data (AAAA-MM-GG): ");
+            	System.out.print("Data (YYYY-MM-DD): ");
             	LocalDate dataE = LocalDate.parse(scanner.nextLine());
 
-            	System.out.print("Ora (HH:MM): ");
+            	System.out.print("Ora (HH:mm): ");
             	LocalTime oraE = LocalTime.parse(scanner.nextLine());
 
             	Film filmDaEliminare = gestioneFilm.trovaProiezione(dataE, oraE);

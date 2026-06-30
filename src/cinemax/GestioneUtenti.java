@@ -155,8 +155,22 @@ public class GestioneUtenti {
 		}
 	}
 	
+	/**
+	 * Restituisce l'utente corrente.
+	 * @return l'utente corrente
+	 */
 	public Utente getUtenteCorrente() {
 	    return utenteCorrente;
+	}
+	
+	/**
+	 * Controlla se un utente esiste.
+	 *
+	 * @param username username dell'utente
+	 * @return true se l'utente è contenuto nella mappa, false altrimenti
+	 */
+	public boolean utenteEsiste(String username) {
+		return mappaUtenti.containsKey(username);
 	}
 
 }
