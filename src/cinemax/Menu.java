@@ -597,6 +597,8 @@ public class Menu {
             			} else {
             			    System.out.println("Nessuna prenotazione trovata.");
             			}
+            			
+            			break;
 
             case "3":
                 gestioneUtenti.logout();
