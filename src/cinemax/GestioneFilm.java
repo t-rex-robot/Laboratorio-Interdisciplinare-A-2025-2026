@@ -10,7 +10,7 @@ import java.util.*;
  * intervallo di date e costo del biglietto senza richiedere autenticazione.
  */
 public class GestioneFilm {
-	private enum Criterio{
+	public enum Criterio{
 		COMPRESO_TRA, PRIMA_DI, DOPO_DI;
 	}
 	private static final Map<String, Film> mappaFilm = new HashMap<>();
