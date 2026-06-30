@@ -155,7 +155,7 @@ public class GestioneFilm {
 	public LinkedList<Film> trovaPerTitolo(String t){
 		LinkedList<Film> l = new LinkedList<>();
 		for (Film f : mappaFilm.values()) {
-			if((f.getTitolo().toLowerCase()).contains(t.toLowerCase()))
+			if((f.getTitolo().toLowerCase()).startsWith(t.toLowerCase()))
 				l.add(f);
 		}
 		return l;
@@ -170,7 +170,7 @@ public class GestioneFilm {
 	public LinkedList<Film> trovaPerGenere(String g){
 		LinkedList<Film> l = new LinkedList<>();
 		for (Film f : mappaFilm.values()) {
-			if ((f.getGenere().toLowerCase()).contains(g.toLowerCase()))
+			if ((f.getGenere().toLowerCase()).startsWith(g.toLowerCase()))
 				l.add(f);
 		}
 		return l;
@@ -408,7 +408,7 @@ public class GestioneFilm {
 		System.out.println("Genere: " + f.getGenere());
 		System.out.println("Regista e anno di uscita: " + f.getRegista() + " " + f.getAnno());
 		System.out.println("Durata ed età minima: " + f.getDurata() + " minuti, " + f.getEtaMinima() + " anni");
-		System.out.println("Costo del biglietto: " + f.getCostoBiglietto() + "euro");
+		System.out.println("Costo del biglietto: " + f.getCostoBiglietto() + " euro");
 		System.out.println("Posti liberi: " + f.getPostiSala());
 	}
 	
