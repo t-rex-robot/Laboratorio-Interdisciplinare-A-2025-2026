@@ -764,9 +764,6 @@ public class Menu {
 
             	if (eliminato) {
             	    System.out.println("Proiezione eliminata!");
-            	} else {
-            	    System.out.println("Impossibile eliminare la proiezione.");
-            	}
 
                 break;
                 

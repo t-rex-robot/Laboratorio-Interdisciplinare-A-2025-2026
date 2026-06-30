@@ -413,8 +413,8 @@ public class GestioneFilm {
 	}
 	
 	/**
-	 * Elimina una proiezione se non ci sono prenotazioni attive.
-	 * Controlla che la proiezione esista e che non siano stati prenotati posti (posti liberi = capienza massima).
+	 * Elimina una proiezione se non ci sono prenotazioni attive e se non è ancora avvenuta.
+	 * Controlla che la proiezione esista, che non sia ancora avvenuta e che non siano stati prenotati posti (posti liberi = capienza massima).
 	 * Aggiorna il file CSV dopo la rimozione.
 	 * 
 	 * @param f proiezione da eliminare
@@ -427,6 +427,10 @@ public class GestioneFilm {
 		}
 		//elimina solo se non ci sono prenotazioni per quella proiezione (quindi se ci sono ancora 200 posti liberi)
 		if (f.getPostiSala() == Film.capienza_max) {
+			if(f.getData().isBefore(LocalDate.now()) || (f.getData().equals(LocalDate.now()) && f.getOra().isBefore(LocalTime.now()))) {
+				System.out.println("Impossibile cancellare una proiezione già avvenuta");
+				return false;
+			}
 			mappaFilm.remove(f.getChiave());
 			salvaFilmSuFile();
 			return true;
@@ -437,8 +441,8 @@ public class GestioneFilm {
 	
 
 	/**
-	 * Modifica la data o l'orario di una proiezione se non ci sono prenotazioni attive.
-	 * Controlla che la proiezione esista e che non siano stati prenotati posti (posti liberi = capienza massima).
+	 * Modifica la data o l'orario di una proiezione se non ci sono prenotazioni attive e se non è ancora avvenuta.
+	 * Controlla che la proiezione esista, che non sia ancora avvenuta e che non siano stati prenotati posti (posti liberi = capienza massima).
 	 * Aggiorna il file CSV dopo la modifica.
 	 * 
 	 * @param f proiezione da modificare
@@ -454,10 +458,15 @@ public class GestioneFilm {
 			//modifica la data
 			case 1:
 				if(parametri[0] instanceof LocalDate localDate) {
-					if(localDate.isBefore(LocalDate.now()) || (f.getData().equals(LocalDate.now()) && f.getOra().isBefore(LocalTime.now()))) {
+					if(f.getData().isBefore(LocalDate.now()) || (f.getData().equals(LocalDate.now()) && f.getOra().isBefore(LocalTime.now()))) {
 						System.out.println("Impossibile modificare una proiezione già avvenuta!");
 						return false;
 					}
+					if(localDate.isBefore(LocalDate.now())) {
+						System.out.println("Data non valida!");
+						return false;
+					}
+						
 					if(controlloDurata(localDate, f.getOra(), f.getDurata(), chiave)) {
 						mappaFilm.remove(f.getChiave());
 						f.setData(localDate);
@@ -474,8 +483,13 @@ public class GestioneFilm {
 			//modifica l'orario
 			case 2:
 				if(parametri[0] instanceof LocalTime localTime) {
-					if(f.getData().equals(LocalDate.now()) && f.getOra().isBefore(LocalTime.now())) {
+					if(f.getData().isBefore(LocalDate.now()) || f.getData().equals(LocalDate.now()) && f.getOra().isBefore(LocalTime.now())) {
 						System.out.println("Impossibile modificare una proiezione già avvenuta!");
+						return false;
+					}
+					
+					if(f.getData().equals(LocalDate.now()) && localTime.isBefore(LocalTime.now())) {
+						System.out.println("Orario non valido!");
 						return false;
 					}
 					if(controlloDurata(f.getData(), localTime, f.getDurata(), chiave)){
