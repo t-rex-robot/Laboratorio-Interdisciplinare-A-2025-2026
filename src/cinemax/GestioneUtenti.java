@@ -13,16 +13,14 @@ import java.util.*;
  */
 public class GestioneUtenti {
 	
-	private final Map<String, Utente> mappaUtenti;
-	private final String PATH = "data/utenti.csv";
-	private Utente utenteCorrente;
+	private static final Map<String, Utente> mappaUtenti = new HashMap<>();;
+	private static final String PATH = "data/utenti.csv";
+	private static Utente utenteCorrente = null;
 	
 	/**
-	 * Costruisce un gestore utenti e inizializza la mappa degli utenti.
+	 * Il costruttore è privato al fine di creare una classe statica.
 	 */
-	public GestioneUtenti() {
-		mappaUtenti = new HashMap<>();
-		utenteCorrente=null;
+	private GestioneUtenti() {
 	}
 	
 	/**
@@ -30,7 +28,7 @@ public class GestioneUtenti {
 	 *
 	 * @throws FormatoDatiNonValidoException se una riga del file non ha il formato corretto
 	 */
-	public void caricaUtentiDaFile() throws FormatoDatiNonValidoException {
+	public static void caricaUtentiDaFile() throws FormatoDatiNonValidoException {
 		try (BufferedReader br = new BufferedReader(new FileReader(PATH))){
 			String riga;
 			while ((riga = br.readLine()) != null) {
@@ -55,7 +53,7 @@ public class GestioneUtenti {
 	 * @param p la password in chiaro da verificare
 	 * @return true se il login è riuscito, false altrimenti
 	 */
-	public boolean loginHashed(String username, String p) {
+	public static boolean loginHashed(String username, String p) {
 		if (mappaUtenti.containsKey(username)) {
 			try {
 				if (passwordMatches(username, p)) {
@@ -84,7 +82,7 @@ public class GestioneUtenti {
 	 * @return true se la password corrisponde, false altrimenti
 	 * @throws NoSuchAlgorithmException se l'algoritmo SHA-256 non è disponibile
 	 */
-	public boolean passwordMatches(String username, String plainPassword) throws NoSuchAlgorithmException {
+	public static boolean passwordMatches(String username, String plainPassword) throws NoSuchAlgorithmException {
 		if (!mappaUtenti.containsKey(username)) {
 			return false;
 		}
@@ -98,7 +96,7 @@ public class GestioneUtenti {
 	 *
 	 * @return true se l'operazione è stata completata
 	 */
-	public boolean logout() {
+	public static boolean logout() {
 		utenteCorrente = null;
 		return true;
 	}
@@ -115,7 +113,7 @@ public class GestioneUtenti {
 	 * @return true se la registrazione ha avuto successo, false altrimenti
 	 */
 	
-	public boolean registraCliente(String n, String c, String us, String p, LocalDate dn, String d) {
+	public static boolean registraCliente(String n, String c, String us, String p, LocalDate dn, String d) {
 		if (mappaUtenti.containsKey(us)) {
 			System.out.print("Username non disponibile! ");
 			return false;
@@ -149,7 +147,7 @@ public class GestioneUtenti {
 	/**
 	 * Stampa tutti gli utenti attualmente caricati nella mappa.
 	 */
-	public void stampaMappa() {
+	public static void stampaMappa() {
 		for (Utente u : mappaUtenti.values()) {
 			System.out.println(u);
 		}
@@ -159,7 +157,7 @@ public class GestioneUtenti {
 	 * Restituisce l'utente corrente.
 	 * @return l'utente corrente
 	 */
-	public Utente getUtenteCorrente() {
+	public static Utente getUtenteCorrente() {
 	    return utenteCorrente;
 	}
 	
@@ -169,7 +167,7 @@ public class GestioneUtenti {
 	 * @param username username dell'utente
 	 * @return true se l'utente è contenuto nella mappa, false altrimenti
 	 */
-	public boolean utenteEsiste(String username) {
+	public static boolean utenteEsiste(String username) {
 		return mappaUtenti.containsKey(username);
 	}
 

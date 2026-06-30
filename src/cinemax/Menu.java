@@ -10,10 +10,6 @@ public class Menu {
     // Scanner per leggere input utente
     private final Scanner scanner;
 
-    // Gestori del sistema
-    private GestioneFilm gestioneFilm;
-    private GestioneUtenti gestioneUtenti;
-    private final GestionePrenotazioni gestionePrenotazioni;
     private Utente utenteLoggato = null;
 
     /**
@@ -23,13 +19,8 @@ public class Menu {
      * @param gestioneUtenti gestore degli utenti
      * @param gestionePrenotazioni gestore delle prenotazioni
      */
-    public Menu(GestioneFilm gestioneFilm, GestioneUtenti gestioneUtenti,GestionePrenotazioni gestionePrenotazioni) {
-
+    public Menu() {
         this.scanner = new Scanner(System.in);
-
-        this.gestioneFilm = gestioneFilm;
-        this.gestioneUtenti = gestioneUtenti;
-        this.gestionePrenotazioni = gestionePrenotazioni;
     }
     
     /**
@@ -144,12 +135,12 @@ public class Menu {
     	    String password = scanner.nextLine();
 
     	    boolean successo =
-    	            gestioneUtenti.loginHashed(username, password);
+    	            GestioneUtenti.loginHashed(username, password);
 
     	    if (successo) {
 
     	        utenteLoggato =
-    	                gestioneUtenti.getUtenteCorrente();
+    	                GestioneUtenti.getUtenteCorrente();
 
     	        System.out.println(
     	                "Benvenuto " +
@@ -195,7 +186,7 @@ public class Menu {
         String domicilio = scanner.nextLine();
 
         // CHIAMATA AL METODO
-        boolean successo = gestioneUtenti.registraCliente(nome, cognome, username, password, dataNascita,domicilio
+        boolean successo = GestioneUtenti.registraCliente(nome, cognome, username, password, dataNascita,domicilio
         );
 
         if (successo) {
@@ -330,7 +321,7 @@ public class Menu {
 				 }
 
             filmList =
-                    gestioneFilm.cercaFilm(
+                    GestioneFilm.cercaFilm(
                             titolo,
                             genere,
                             critData,
@@ -344,7 +335,7 @@ public class Menu {
         } else {
 
             filmList =
-                    gestioneFilm.getTuttiFilm();
+                    GestioneFilm.getTuttiFilm();
         }
 
         if (filmList.isEmpty()) {
@@ -362,7 +353,7 @@ public class Menu {
                     "\n---------------------"
             );
 
-            gestioneFilm.visualizzaProiezione(f);
+            GestioneFilm.visualizzaProiezione(f);
         }
     }
     
@@ -408,7 +399,7 @@ public class Menu {
             	System.out.println("Inserisci numero biglietti:");
             	int n = Integer.parseInt(scanner.nextLine());
 
-            	Film scelto = gestioneFilm.trovaProiezione(data, ora);
+            	Film scelto = GestioneFilm.trovaProiezione(data, ora);
 
             	if (scelto == null) {
             	    System.out.println(" Proiezione non trovata.");
@@ -419,7 +410,7 @@ public class Menu {
             	    System.out.println(" Posti insufficienti disponibili.");
             	    break;
             	}
-            	boolean ok = gestionePrenotazioni.creaPrenotazione(
+            	boolean ok = GestionePrenotazioni.creaPrenotazione(
             	        utenteLoggato,
             	        scelto,
             	        n
@@ -441,7 +432,7 @@ public class Menu {
             	    System.out.println("Nuovo numero biglietti:");
             	    int nuovi = Integer.parseInt(scanner.nextLine());
 
-            	    boolean mod = gestionePrenotazioni.modificaPrenotazione(codiceMod, nuovi);
+            	    boolean mod = GestionePrenotazioni.modificaPrenotazione(codiceMod, nuovi);
 
             	    if (mod) {
             	        System.out.println("Prenotazione modificata con successo!");
@@ -450,13 +441,13 @@ public class Menu {
             	    break;
             case "3":
                 List<Prenotazione> miePrenotazioni =
-                gestionePrenotazioni.cercaPerUtente(utenteLoggato.getUsername());
+                GestionePrenotazioni.cercaPerUtente(utenteLoggato.getUsername());
 
                 if (miePrenotazioni.isEmpty()) {
                 	System.out.println("Nessuna prenotazione trovata.");
                 } else {
                 	for (Prenotazione p : miePrenotazioni) {
-                		gestionePrenotazioni.visualizzaPrenotazione(p);
+                		GestionePrenotazioni.visualizzaPrenotazione(p);
                 	}
                 }
 
@@ -473,7 +464,7 @@ public class Menu {
             	        break;
             	    }
 
-            	    boolean elim = gestionePrenotazioni.eliminaPrenotazione(codiceElim);
+            	    boolean elim = GestionePrenotazioni.eliminaPrenotazione(codiceElim);
 
             	    if (elim) {
             	        System.out.println("Prenotazione eliminata con successo!");
@@ -487,7 +478,7 @@ public class Menu {
                 break;
 
             case "6":
-                gestioneUtenti.logout();
+                GestioneUtenti.logout();
                 utenteLoggato = null;
                 System.out.println("Logout effettuato con successo.");
                 break;
@@ -524,13 +515,13 @@ public class Menu {
         switch (scelta) {
 
             case "1":
-                List<Prenotazione> oggi = gestionePrenotazioni.prenotazioniOggi();
+                List<Prenotazione> oggi = GestionePrenotazioni.prenotazioniOggi();
 
                 if (oggi.isEmpty()) {
                     System.out.println("Nessuna prenotazione per oggi.");
                 } else {
                     for (Prenotazione p : oggi) {
-                        gestionePrenotazioni.visualizzaPrenotazione(p);
+                        GestionePrenotazioni.visualizzaPrenotazione(p);
                     }
                 }
 
@@ -555,14 +546,14 @@ public class Menu {
             			        System.out.print("Inserisci codice prenotazione: ");
             			        String codice = scanner.nextLine();
 
-            			        risultati = gestionePrenotazioni.cercaPrenotazione(1, codice);
+            			        risultati = GestionePrenotazioni.cercaPrenotazione(1, codice);
             			        break;
 
             			    case 2:
             			        System.out.print("Inserisci username: ");
             			        String username = scanner.nextLine();
-            			        if(gestioneUtenti.utenteEsiste(username)) {
-            			        	risultati = gestionePrenotazioni.cercaPrenotazione(2, username);
+            			        if(GestioneUtenti.utenteEsiste(username)) {
+            			        	risultati = GestionePrenotazioni.cercaPrenotazione(2, username);
             			        }else {
             			        	System.out.println("Utente non trovato");
             			        }
@@ -572,7 +563,7 @@ public class Menu {
             			        System.out.print("Inserisci titolo film: ");
             			        String titolo = scanner.nextLine();
 
-            			        risultati = gestionePrenotazioni.cercaPrenotazione(3, titolo);
+            			        risultati = GestionePrenotazioni.cercaPrenotazione(3, titolo);
             			        break;
 
             			    case 4:
@@ -583,7 +574,7 @@ public class Menu {
             			        String fine = scanner.nextLine();
             			        
             			        if(!LocalDate.parse(fine).isBefore(LocalDate.parse(inizio))) {
-            			        	risultati = gestionePrenotazioni.cercaPrenotazione(4, inizio, fine);
+            			        	risultati = GestionePrenotazioni.cercaPrenotazione(4, inizio, fine);
             			        }else {
             			        	System.out.println("Date non valide");
             			        }
@@ -598,7 +589,7 @@ public class Menu {
             			if (!risultati.isEmpty()) {
 
             			    for (Prenotazione p : risultati) {
-            			        gestionePrenotazioni.visualizzaPrenotazione(p);
+            			        GestionePrenotazioni.visualizzaPrenotazione(p);
             			    }
 
             			} else {
@@ -608,7 +599,7 @@ public class Menu {
             			break;
 
             case "3":
-                gestioneUtenti.logout();
+                GestioneUtenti.logout();
                 utenteLoggato = null;
                 System.out.println("Logout effettuato con successo.");
                 break;
@@ -674,7 +665,7 @@ public class Menu {
             	System.out.print("Costo biglietto: ");
             	double costo = Double.parseDouble(scanner.nextLine());
 
-            	boolean ok = gestioneFilm.creaProiezione(
+            	boolean ok = GestioneFilm.creaProiezione(
             	        data,
             	        ora,
             	        titolo,
@@ -703,7 +694,7 @@ public class Menu {
             	System.out.print("Ora attuale (HH:mm): ");
             	LocalTime oraVecchia = LocalTime.parse(scanner.nextLine());
 
-            	Film f = gestioneFilm.trovaProiezione(
+            	Film f = GestioneFilm.trovaProiezione(
             	        dataVecchia,
             	        oraVecchia
             	);
@@ -726,7 +717,7 @@ public class Menu {
             	        System.out.print("Nuova data (YYYY-MM-DD): ");
             	        LocalDate nuovaData = LocalDate.parse(scanner.nextLine());
 
-            	        gestioneFilm.modificaProiezione(f,1,nuovaData);
+            	        GestioneFilm.modificaProiezione(f,1,nuovaData);
 
             	        break;
 
@@ -735,7 +726,7 @@ public class Menu {
             	        System.out.print("Nuova ora (HH:mm): ");
             	        LocalTime nuovaOra =LocalTime.parse(scanner.nextLine());
 
-            	        gestioneFilm.modificaProiezione(f,2,nuovaOra);
+            	        GestioneFilm.modificaProiezione(f,2,nuovaOra);
 
             	        break;
             	        
@@ -754,7 +745,7 @@ public class Menu {
             	System.out.print("Ora (HH:mm): ");
             	LocalTime oraE = LocalTime.parse(scanner.nextLine());
 
-            	Film filmDaEliminare = gestioneFilm.trovaProiezione(dataE, oraE);
+            	Film filmDaEliminare = GestioneFilm.trovaProiezione(dataE, oraE);
             	
             	System.out.println("Sei sicuro di voler eliminare la proiezione? (s/n)");
             	String conferma = scanner.nextLine();
@@ -769,7 +760,7 @@ public class Menu {
             	    break;
             	}
 
-            	boolean eliminato = gestioneFilm.eliminaProiezione(filmDaEliminare);
+            	boolean eliminato = GestioneFilm.eliminaProiezione(filmDaEliminare);
 
             	if (eliminato) {
             	    System.out.println("Proiezione eliminata!");
@@ -783,7 +774,7 @@ public class Menu {
                  break;
 
             case "5":
-                gestioneUtenti.logout();
+                GestioneUtenti.logout();
                 utenteLoggato = null;
                 System.out.println("Logout effettuato con successo.");
                 break;

@@ -8,26 +8,18 @@ public class CineMax {
 
 	public static void main(String[] args) {
 		
-		 try {
-	            // CREAZIONE GESTORI
-
-	            GestioneFilm gestioneFilm = new GestioneFilm();
-
-	            GestioneUtenti gestioneUtenti = new GestioneUtenti();
-
-	            GestionePrenotazioni gestionePrenotazioni = new GestionePrenotazioni(gestioneFilm);
-	            
+		 try {  
 	            // CARICAMENTO FILE
 
-	            gestioneFilm.caricaFilmDaFile();
+	            GestioneFilm.caricaFilmDaFile();
 
-	            gestioneUtenti.caricaUtentiDaFile();
+	            GestioneUtenti.caricaUtentiDaFile();
 
-	            gestionePrenotazioni.caricaPrenotazioniDaFile();
+	            GestionePrenotazioni.caricaPrenotazioniDaFile();
 
 	            // CREAZIONE MENU
 
-	            Menu menu = new Menu(gestioneFilm, gestioneUtenti, gestionePrenotazioni);
+	            Menu menu = new Menu();
 
 	            // AVVIO PROGRAMMA
 

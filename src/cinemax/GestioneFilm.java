@@ -13,11 +13,13 @@ public class GestioneFilm {
 	public enum Criterio{
 		COMPRESO_TRA, PRIMA_DI, DOPO_DI;
 	}
-	private Map<String, Film> mappaFilm;
-	private final String PATH="data/film.csv";
+	private static final Map<String, Film> mappaFilm = new HashMap<>();
+	private static final String PATH="data/film.csv";
 	
-	public GestioneFilm() {
-		mappaFilm = new HashMap<>();
+	/**
+	 * Il costruttore è privato al fine di creare una classe statica.
+	 */
+	private GestioneFilm() {
 	}
 	
 	/**
@@ -27,7 +29,7 @@ public class GestioneFilm {
 	 *
 	 * @throws FormatoDatiNonValidoException se il file non rispetta il formato previsto
 	 */
-	public void caricaFilmDaFile() throws FormatoDatiNonValidoException {
+	public static void caricaFilmDaFile() throws FormatoDatiNonValidoException {
 		try(BufferedReader br = new BufferedReader(new FileReader(PATH))){
 			String riga;
 			while((riga=br.readLine()) != null) {
@@ -47,7 +49,7 @@ public class GestioneFilm {
 	 * Sovrascrive il contenuto esistente del file per aggiornare lo stato 
 	 * delle proiezioni.
 	 */
-	public void salvaFilmSuFile() {
+	public static void salvaFilmSuFile() {
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(PATH))){
 			for(Film f : mappaFilm.values()) {
 				bw.write(f.toCSV());
@@ -63,7 +65,7 @@ public class GestioneFilm {
 	 *
 	 * @return lista completa delle proiezioni attualmente disponibili
 	 */
-	public List<Film> getTuttiFilm() {
+	public static List<Film> getTuttiFilm() {
 	    return new ArrayList<>(mappaFilm.values());
 	}
 	
@@ -77,7 +79,7 @@ public class GestioneFilm {
 	 * @param chiave chiave della proiezione, usato per escludere se stesso dal controllo in caso di modifica
 	 * @return true se la nuova proiezione non si sovrappone ad altre proiezioni
 	 */
-	public boolean controlloDurata(LocalDate data, LocalTime ora, int durata, String chiave) {
+	public static boolean controlloDurata(LocalDate data, LocalTime ora, int durata, String chiave) {
 		for(Film f : mappaFilm.values()) {
 			if(f.getData().equals(data) && !f.getChiave().equals(chiave)) {
 				if(f.getOra().isBefore(ora)) {
@@ -112,7 +114,7 @@ public class GestioneFilm {
 	 * @param costoBiglietto costo del biglietto
 	 * @return true se la proiezione è stata creata e salvata correttamente
 	 */
-	public boolean creaProiezione(LocalDate data, LocalTime ora, String titolo, String genere, String regista, int anno, int durata, int etaMinima,  double costoBiglietto) {
+	public static boolean creaProiezione(LocalDate data, LocalTime ora, String titolo, String genere, String regista, int anno, int durata, int etaMinima,  double costoBiglietto) {
 		if(data.isBefore(LocalDate.now())) {
 			throw new FilmException("Data non valida");
 		}else {
@@ -152,7 +154,7 @@ public class GestioneFilm {
 	 * @param t sottostringa del titolo da cercare
 	 * @return elenco delle proiezioni corrispondenti
 	 */
-	public LinkedList<Film> trovaPerTitolo(String t){
+	public static LinkedList<Film> trovaPerTitolo(String t){
 		LinkedList<Film> l = new LinkedList<>();
 		for (Film f : mappaFilm.values()) {
 			if((f.getTitolo().toLowerCase()).startsWith(t.toLowerCase()))
@@ -167,7 +169,7 @@ public class GestioneFilm {
 	 * @param g genere del film
 	 * @return elenco delle proiezioni corrispondenti al genere
 	 */
-	public LinkedList<Film> trovaPerGenere(String g){
+	public static LinkedList<Film> trovaPerGenere(String g){
 		LinkedList<Film> l = new LinkedList<>();
 		for (Film f : mappaFilm.values()) {
 			if ((f.getGenere().toLowerCase()).startsWith(g.toLowerCase()))
@@ -186,7 +188,7 @@ public class GestioneFilm {
 	 * @param data2 data secondaria, valida solo per {@code Criterio.COMPRESO_TRA}
 	 * @return elenco delle proiezioni che soddisfano il criterio temporale
 	 */
-	public LinkedList<Film> trovaPerDate(Criterio crit, LocalDate data1, LocalDate data2){
+	public static LinkedList<Film> trovaPerDate(Criterio crit, LocalDate data1, LocalDate data2){
 		LinkedList<Film> l = new LinkedList<>();
 		switch(crit) {
 		case COMPRESO_TRA:
@@ -227,7 +229,7 @@ public class GestioneFilm {
 	 * @param costo2 secondo valore, valido solo per {@code Criterio.COMPRESO_TRA}
 	 * @return elenco delle proiezioni che soddisfano il filtro di costo
 	 */
-	public LinkedList<Film> trovaPerCosto(Criterio crit, double costo1, double costo2){
+	public static LinkedList<Film> trovaPerCosto(Criterio crit, double costo1, double costo2){
 		LinkedList<Film> l = new LinkedList<>();
 		if(costo1<0) throw new FormatoDatiNonValidoException("Non esistono costi negativi");
 		
@@ -268,7 +270,7 @@ public class GestioneFilm {
 	 * @param parametri parametri del filtro
 	 * @return elenco delle proiezioni risultanti
 	 */
-	public LinkedList<Film> trovaFilm(int tipoRicerca, String ...parametri){
+	public static LinkedList<Film> trovaFilm(int tipoRicerca, String ...parametri){
 		switch(tipoRicerca) {
 		case 1 -> {
                     return trovaPerTitolo(parametri[0]);
@@ -304,7 +306,7 @@ public class GestioneFilm {
 	 * @param ora ora della proiezione
 	 * @return la proiezione trovata, o {@code null} se non presente
 	 */
-	public Film trovaProiezione(LocalDate data, LocalTime ora) {
+	public static Film trovaProiezione(LocalDate data, LocalTime ora) {
 
 	    for (Film f : mappaFilm.values()) {
 	        if (f.getData().equals(data) && f.getOra().equals(ora)) {
@@ -330,7 +332,7 @@ public class GestioneFilm {
 	 * @param costo2 secondo valore del filtro prezzo
 	 * @return elenco delle proiezioni che soddisfano tutti i criteri specificati
 	 */
-	public List<Film> cercaFilm(
+	public static List<Film> cercaFilm(
 	        String titolo,
 	        String genere,
 	        Criterio criterioDate,
@@ -401,7 +403,7 @@ public class GestioneFilm {
 	 *
 	 * @param f proiezione da visualizzare
 	 */
-	public void visualizzaProiezione(Film f) {
+	public static void visualizzaProiezione(Film f) {
 		System.out.println("===== PROIEZIONE =====");
 		System.out.println("Titolo: " + f.getTitolo());
 		System.out.println("Data e ora: " + f.getData().toString() + " " + f.getOra().toString());
@@ -420,7 +422,7 @@ public class GestioneFilm {
 	 * @param f proiezione da eliminare
 	 * @return true se la proiezione è stata eliminata con successo, false altrimenti
 	 */
-	public boolean eliminaProiezione(Film f) {
+	public static boolean eliminaProiezione(Film f) {
 		if(!mappaFilm.containsKey(f.getChiave())) {
 			System.out.println("Proiezione non esistente");
 			return false;
@@ -450,7 +452,7 @@ public class GestioneFilm {
 	 * @param parametri parametri della modifica (LocalDate per data, LocalTime per orario)
 	 * @return true se la modifica è stata effettuata con successo, false altrimenti
 	 */
-	public boolean modificaProiezione(Film f, int tipoModifica, Object ...parametri) {
+	public static boolean modificaProiezione(Film f, int tipoModifica, Object ...parametri) {
 		if (f.getPostiSala()==Film.capienza_max) {
 			String chiave = f.getChiave();
 			switch(tipoModifica) {

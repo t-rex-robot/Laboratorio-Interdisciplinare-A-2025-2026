@@ -13,19 +13,15 @@ import java.util.*;
 public class GestionePrenotazioni {
 
     // Mappa: con chiave = codice prenotazione e valore = oggetto Prenotazione
-    private Map<String, Prenotazione> mappaPrenotazioni;
+    private static final Map<String, Prenotazione> mappaPrenotazioni = new HashMap<>();
 
     // percorso file CSV
-    private final String PATH = "data/prenotazioni.csv";
+    private static final String PATH = "data/prenotazioni.csv";
     
- // riferimento a i Film
-    private GestioneFilm gestioneFilm;
-    
- // Costruttore Principale
- // obbliga il collegamento con GestioneFilm per evitare errori
-    public GestionePrenotazioni(GestioneFilm gestioneFilm) {
-        this.gestioneFilm = gestioneFilm; // collegamento obbligatorio
-        mappaPrenotazioni = new HashMap<>();
+    /**
+	 * Il costruttore è privato al fine di creare una classe statica.
+	 */
+    private GestionePrenotazioni() {
     }
     
     /**
@@ -33,7 +29,7 @@ public class GestionePrenotazioni {
      * inserisce nella mappa. Ogni riga del CSV deve rispettare il
      * formato atteso altrimenti viene sollevata una {@link FormatoDatiNonValidoException}.
      */
-    public void caricaPrenotazioniDaFile() throws FormatoDatiNonValidoException {
+    public static void caricaPrenotazioniDaFile() throws FormatoDatiNonValidoException {
 
         try (BufferedReader br = new BufferedReader(new FileReader(PATH))) {
 
@@ -60,7 +56,7 @@ public class GestionePrenotazioni {
                     Double.parseDouble(dati[6]) // costo unitario
                 );
                 
-                Film f= gestioneFilm.trovaProiezione(p.getDataProiezione(), p.getOraProiezione());
+                Film f= GestioneFilm.trovaProiezione(p.getDataProiezione(), p.getOraProiezione());
                 f.eliminaPosti(p.getNumeroBiglietti());
                 
                 mappaPrenotazioni.put( p.getCodicePrenotazione(), p);
@@ -80,7 +76,7 @@ public class GestionePrenotazioni {
      * esistente). Usato per salvare lo stato dopo creazioni, modifiche o
      * cancellazioni.
      */
-    public void salvaPrenotazioniSuFile() {
+    public static void salvaPrenotazioniSuFile() {
     	
     	//Uso filewriter(PATH) perche riscreve tutto per evitare dubplicati e tenere lo stato aggiornato
 
@@ -105,7 +101,7 @@ public class GestionePrenotazioni {
     
     // Genera un codice univoco per la prenotazione usando UUID
 
-    private String generaCodicePrenotazione() {
+    private static String generaCodicePrenotazione() {
 
     	return UUID.randomUUID().toString();
     }
@@ -119,7 +115,7 @@ public class GestionePrenotazioni {
      * @param numeroBiglietti il numero di biglietti richiesti
      * @return true se la prenotazione è stata creata con successo, false altrimenti
      */
-    public boolean creaPrenotazione(Utente utente, Film film, int numeroBiglietti) {
+    public static boolean creaPrenotazione(Utente utente, Film film, int numeroBiglietti) {
 
 		// controllo numero valido
 		if (numeroBiglietti <= 0) {
@@ -160,7 +156,7 @@ public class GestionePrenotazioni {
 		mappaPrenotazioni.put( p.getCodicePrenotazione(), p);
 		
 		salvaPrenotazioniSuFile();
-		gestioneFilm.salvaFilmSuFile();
+		GestioneFilm.salvaFilmSuFile();
 		
 		return true;
 		}
@@ -172,7 +168,7 @@ public class GestionePrenotazioni {
      * @param codice codice della prenotazione
      * @return la prenotazione trovata o null
      */
-    public Prenotazione cercaPerCodice(String codice) {
+    public static Prenotazione cercaPerCodice(String codice) {
 
         if (mappaPrenotazioni.containsKey(codice)) {
             return mappaPrenotazioni.get(codice);
@@ -189,7 +185,7 @@ public class GestionePrenotazioni {
      * @param username username dell'utente
      * @return lista di prenotazioni dell'utente
      */
-    public List<Prenotazione> cercaPerUtente(String username) {
+    public static List<Prenotazione> cercaPerUtente(String username) {
 
         List<Prenotazione> risultato = new ArrayList<>();
 
@@ -210,13 +206,13 @@ public class GestionePrenotazioni {
      * @param titolo sottostringa del titolo da cercare
      * @return lista di prenotazioni corrispondenti
      */
-    public List<Prenotazione> cercaPerFilm(String titolo) {
+    public static List<Prenotazione> cercaPerFilm(String titolo) {
 
         List<Prenotazione> risultato = new ArrayList<>();
 
         for (Prenotazione p : mappaPrenotazioni.values()) {
 
-            if (p.getTitoloFilm().toLowerCase().contains(titolo.toLowerCase())) {
+            if (p.getTitoloFilm().toLowerCase().startsWith(titolo.toLowerCase())) {
 
                 risultato.add(p);
             }
@@ -232,7 +228,7 @@ public class GestionePrenotazioni {
      * @param fine data di fine (inclusa)
      * @return lista di prenotazioni nell'intervallo
      */
-    public List<Prenotazione> cercaPerIntervalloDate(LocalDate inizio, LocalDate fine) {
+    public static List<Prenotazione> cercaPerIntervalloDate(LocalDate inizio, LocalDate fine) {
 
 		List<Prenotazione> risultato = new ArrayList<>();
 			
@@ -256,7 +252,7 @@ public class GestionePrenotazioni {
      * @param parametri parametri variabili a seconda del tipo di ricerca
      * @return lista di prenotazioni risultato della ricerca
      */
-    public List<Prenotazione> cercaPrenotazione(int tipoRicerca, String... parametri) {
+    public static List<Prenotazione> cercaPrenotazione(int tipoRicerca, String... parametri) {
 
         switch (tipoRicerca) {
 
@@ -295,7 +291,7 @@ public class GestionePrenotazioni {
      *
      * @param p la prenotazione da visualizzare
      */
-    public void visualizzaPrenotazione(Prenotazione p) {
+    public static void visualizzaPrenotazione(Prenotazione p) {
 
         System.out.println("===== PRENOTAZIONE =====");
         System.out.println("Codice: " + p.getCodicePrenotazione());
@@ -317,7 +313,7 @@ public class GestionePrenotazioni {
      * @param codice codice della prenotazione da eliminare
      * @return true se l'eliminazione è riuscita, false altrimenti
      */
-    public boolean eliminaPrenotazione(String codice) {
+    public static boolean eliminaPrenotazione(String codice) {
 
         Prenotazione p = mappaPrenotazioni.get(codice);
 
@@ -333,11 +329,11 @@ public class GestionePrenotazioni {
         }
 
         // recupero film
-        Film film = gestioneFilm.trovaProiezione(p.getDataProiezione(), p.getOraProiezione());
+        Film film = GestioneFilm.trovaProiezione(p.getDataProiezione(), p.getOraProiezione());
 
         if (film != null) {
             film.aggiungiPosti(p.getNumeroBiglietti());
-            gestioneFilm.salvaFilmSuFile();
+            GestioneFilm.salvaFilmSuFile();
         }
 
         
@@ -357,7 +353,7 @@ public class GestionePrenotazioni {
      * @param nuoviBiglietti nuovo numero di biglietti richiesto
      * @return true se la modifica è stata applicata correttamente
      */
-    public boolean modificaPrenotazione(String codice, int nuoviBiglietti) {
+    public static boolean modificaPrenotazione(String codice, int nuoviBiglietti) {
 
         Prenotazione p = mappaPrenotazioni.get(codice);
 
@@ -372,7 +368,7 @@ public class GestionePrenotazioni {
             return false;
         }
 
-        Film film = gestioneFilm.trovaProiezione(p.getDataProiezione(), p.getOraProiezione());
+        Film film = GestioneFilm.trovaProiezione(p.getDataProiezione(), p.getOraProiezione());
 
         if (film == null) {
             System.out.println("Film non trovato");
@@ -404,7 +400,7 @@ public class GestionePrenotazioni {
         // aggiorna prenotazione
         p.setNumeroBiglietti(nuoviBiglietti);
         
-        gestioneFilm.salvaFilmSuFile();
+        GestioneFilm.salvaFilmSuFile();
 
         salvaPrenotazioniSuFile();
 
@@ -416,7 +412,7 @@ public class GestionePrenotazioni {
      *
      * @return lista di prenotazioni per la data odierna
      */
-    public List<Prenotazione> prenotazioniOggi() {
+    public static List<Prenotazione> prenotazioniOggi() {
 
         List<Prenotazione> risultato = new ArrayList<>();
 

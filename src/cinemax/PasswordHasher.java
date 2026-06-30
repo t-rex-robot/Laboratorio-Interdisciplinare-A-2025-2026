@@ -47,9 +47,8 @@ public class PasswordHasher {
      */
     public static void main(String[] args) throws NoSuchAlgorithmException {
 
-        GestioneUtenti mappaU = new GestioneUtenti();
-		mappaU.caricaUtentiDaFile();
-		mappaU.stampaMappa();
+		GestioneUtenti.caricaUtentiDaFile();
+		GestioneUtenti.stampaMappa();
 
         // Test di verifica password usando hash
         Scanner sc = new Scanner(System.in);
@@ -61,7 +60,7 @@ public class PasswordHasher {
         String enteredPassword = sc.nextLine();
 
         System.out.println("\nVerifica password per utente: " + username);
-        boolean passwordOK = mappaU.loginHashed(username, enteredPassword);
+        boolean passwordOK = GestioneUtenti.loginHashed(username, enteredPassword);
         System.out.println(passwordOK ? "La password corrisponde al valore memorizzato." : "La password NON corrisponde.");
 
 
