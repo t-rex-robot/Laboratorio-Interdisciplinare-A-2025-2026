@@ -764,7 +764,7 @@ public class Menu {
 
             	if (eliminato) {
             	    System.out.println("Proiezione eliminata!");
-
+            	}
                 break;
                 
             case "4":
