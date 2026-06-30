@@ -148,10 +148,10 @@ public class GestioneFilm {
 	}
 	
 	/**
-	 * Restituisce le proiezioni il cui titolo contiene la sottostringa
-	 * specificata. Il confronto è case-insensitive per agevolare la ricerca.
+	 * Restituisce le proiezioni il cui titolo inizia con la stringa specificata.
+	 *  Il confronto è case-insensitive per agevolare la ricerca.
 	 *
-	 * @param t sottostringa del titolo da cercare
+	 * @param t stringa iniziale del titolo da cercare
 	 * @return elenco delle proiezioni corrispondenti
 	 */
 	public static LinkedList<Film> trovaPerTitolo(String t){
