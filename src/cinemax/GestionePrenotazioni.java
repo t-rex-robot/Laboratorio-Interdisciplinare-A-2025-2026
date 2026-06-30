@@ -59,7 +59,9 @@ public class GestionePrenotazioni {
                     Integer.parseInt(dati[5]),  // numero biglietti
                     Double.parseDouble(dati[6]) // costo unitario
                 );
-
+                
+                Film f= gestioneFilm.trovaProiezione(p.getDataProiezione(), p.getOraProiezione());
+                f.eliminaPosti(p.getNumeroBiglietti());
                 
                 mappaPrenotazioni.put( p.getCodicePrenotazione(), p);
             }
@@ -287,6 +289,7 @@ public class GestionePrenotazioni {
      * Stampa i dettagli di una prenotazione.
      * - codice prenotazione
      * - nome e cognome del cliente (username)
+     * - titolo della proiezione
      * - data e ora della proiezione
      * - numero di biglietti, costo unitario e totale
      *
@@ -297,6 +300,7 @@ public class GestionePrenotazioni {
         System.out.println("===== PRENOTAZIONE =====");
         System.out.println("Codice: " + p.getCodicePrenotazione());
         System.out.println("Cliente: " + p.getUsername());
+        System.out.println("Titolo: " + p.getTitoloFilm());
         System.out.println("Data: " + p.getDataProiezione());
         System.out.println("Ora: " + p.getOraProiezione());
         System.out.println("Biglietti: " + p.getNumeroBiglietti());
@@ -329,7 +333,7 @@ public class GestionePrenotazioni {
         }
 
         // recupero film
-        Film film = gestioneFilm.trovaProiezione( p.getTitoloFilm(), p.getDataProiezione(), p.getOraProiezione());
+        Film film = gestioneFilm.trovaProiezione(p.getDataProiezione(), p.getOraProiezione());
 
         if (film != null) {
             film.aggiungiPosti(p.getNumeroBiglietti());
@@ -341,7 +345,6 @@ public class GestionePrenotazioni {
 
         salvaPrenotazioniSuFile();
 
-        System.out.println("Prenotazione eliminata con successo");
         return true;
     }
     
@@ -369,7 +372,7 @@ public class GestionePrenotazioni {
             return false;
         }
 
-        Film film = gestioneFilm.trovaProiezione( p.getTitoloFilm(), p.getDataProiezione(), p.getOraProiezione());
+        Film film = gestioneFilm.trovaProiezione(p.getDataProiezione(), p.getOraProiezione());
 
         if (film == null) {
             System.out.println("Film non trovato");
@@ -405,7 +408,6 @@ public class GestionePrenotazioni {
 
         salvaPrenotazioniSuFile();
 
-        System.out.println("Prenotazione modificata con successo");
         return true;
     }
     

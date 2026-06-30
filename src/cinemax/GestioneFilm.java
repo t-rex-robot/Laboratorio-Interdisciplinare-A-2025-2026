@@ -136,7 +136,6 @@ public class GestioneFilm {
 				String film = f.toCSV();
 				bw.write(film);
 				bw.newLine();
-				System.out.println("Proiezione creata con successo!");
 				return true;
 			}
 			catch(IOException e) {
@@ -297,35 +296,21 @@ public class GestioneFilm {
 	// Trova una singola proiezione precisa
 	// Usato internamente da GestionePrenotazioni
 	/**
-	 * Cerca una proiezione esatta a partire da titolo, data e ora.
+	 * Cerca una proiezione esatta a partire da data e ora.
 	 * Restituisce la proiezione corrispondente oppure {@code null}
 	 * se non esiste una corrispondenza completa.
 	 *
-	 * @param titolo titolo del film
 	 * @param data data della proiezione
 	 * @param ora ora della proiezione
 	 * @return la proiezione trovata, o {@code null} se non presente
 	 */
-	public Film trovaProiezione(
-	        String titolo,
-	        LocalDate data,
-	        LocalTime ora
-	) {
+	public Film trovaProiezione(LocalDate data, LocalTime ora) {
 
 	    for (Film f : mappaFilm.values()) {
-
-	        if (
-	            f.getTitolo().equalsIgnoreCase(titolo)
-	            &&
-	            f.getData().equals(data)
-	            &&
-	            f.getOra().equals(ora)
-	        ) {
-
+	        if (f.getData().equals(data) && f.getOra().equals(ora)) {
 	            return f;
 	        }
 	    }
-
 	    return null;
 	}
 	
@@ -444,7 +429,6 @@ public class GestioneFilm {
 		if (f.getPostiSala() == Film.capienza_max) {
 			mappaFilm.remove(f.getChiave());
 			salvaFilmSuFile();
-			System.out.println("Proiezione eliminata con successo! ");
 			return true;
 		}
 		System.out.println("Impossibile cancellare una proiezione con prenotazioni");

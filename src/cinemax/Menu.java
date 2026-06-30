@@ -408,7 +408,7 @@ public class Menu {
             	System.out.println("Inserisci numero biglietti:");
             	int n = Integer.parseInt(scanner.nextLine());
 
-            	Film scelto = gestioneFilm.trovaProiezione(titolo, data, ora);
+            	Film scelto = gestioneFilm.trovaProiezione(data, ora);
 
             	if (scelto == null) {
             	    System.out.println(" Proiezione non trovata.");
@@ -695,7 +695,6 @@ public class Menu {
             	LocalTime oraVecchia = LocalTime.parse(scanner.nextLine());
 
             	Film f = gestioneFilm.trovaProiezione(
-            	        titoloM,
             	        dataVecchia,
             	        oraVecchia
             	);
@@ -746,7 +745,7 @@ public class Menu {
             	System.out.print("Ora (HH:MM): ");
             	LocalTime oraE = LocalTime.parse(scanner.nextLine());
 
-            	Film filmDaEliminare = gestioneFilm.trovaProiezione(titoloE, dataE, oraE);
+            	Film filmDaEliminare = gestioneFilm.trovaProiezione(dataE, oraE);
             	
             	System.out.println("Sei sicuro di voler eliminare la proiezione? (s/n)");
             	String conferma = scanner.nextLine();
