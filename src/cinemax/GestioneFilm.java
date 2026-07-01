@@ -101,7 +101,8 @@ public class GestioneFilm {
 	/**
 	 * Crea una nuova proiezione e la salva su file.
  	 * Il metodo verifica la validità della data, il limite di età minima e 
-	 * controlla che non ci siano sovrapposizioni con altre proiezioni già programmate.
+	 * controlla che non ci siano sovrapposizioni con altre proiezioni già programmate
+	 * e che la durata del film non si protragga oltre mezzanotte.
 	 *
 	 * @param data data della proiezione
 	 * @param ora ora della proiezione
@@ -129,7 +130,10 @@ public class GestioneFilm {
 		if(mappaFilm.containsKey(data.toString()+ora.toString())) {
 			throw new FilmException("Esiste già una proiezione per la stessa data e ora");
 		}
-		//controlla che la durata del nuovo film non si sovrapponga ad altre proiezioni nello stesso giorno
+		//controlla che la durata del nuovo film non si protragga al giorno dopo e che non si sovrapponga ad altre proiezioni nello stesso giorno
+		if(ora.plusMinutes(durata).isBefore(ora)) {
+			throw new FilmException("Il film non può protrarsi al giorno dopo");
+		}
 		String chiaveProvvisoria = "";
 		if(controlloDurata(data, ora, durata, chiaveProvvisoria)) {
 			Film f = new Film(data, ora, titolo.trim(), genere.trim(), regista.trim(), anno, durata, etaMinima, costoBiglietto);
@@ -494,6 +498,12 @@ public class GestioneFilm {
 						System.out.println("Orario non valido!");
 						return false;
 					}
+					
+					if(localTime.plusMinutes(f.getDurata()).isBefore(localTime)) {
+						System.out.println("Il film non può protrarsi al giorno dopo");
+						return false;
+					}
+					
 					if(controlloDurata(f.getData(), localTime, f.getDurata(), chiave)){
 						mappaFilm.remove(f.getChiave());
 						f.setOra(localTime);
