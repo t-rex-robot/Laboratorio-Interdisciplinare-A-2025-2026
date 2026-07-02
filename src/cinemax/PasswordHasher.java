@@ -4,6 +4,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
+/**
+ * @author Elisa (Sviluppatore principale e Documentazione Javadoc)
+ * Matricole: 765763 (VA)
+ */
 
 /**
  * Fornisce funzioni per generare l'hash SHA-256 di una password in chiaro.

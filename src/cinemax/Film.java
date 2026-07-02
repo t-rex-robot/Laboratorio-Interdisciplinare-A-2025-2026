@@ -3,6 +3,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 /**
+ * @author Camilla (Sviluppatore principale)
+ * @author Elisa (Documentazione Javadoc)
+ * @author Leonardo (Revisione e testing)
+ * Matricole: 766743 (VA), 765763 (VA), 766745 (VA)
+ */
+
+/**
  * Rappresenta un film programmato in sala, con data e ora della proiezione,
  * i dettagli di produzione, i limiti di età e i posti disponibili.
  */

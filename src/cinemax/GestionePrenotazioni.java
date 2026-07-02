@@ -5,6 +5,12 @@ import java.time.LocalTime;
 import java.util.*;
 
 /**
+ * @author Paolo (Sviluppatore principale)
+ * @author Elisa (Documentazione Javadoc)
+ * Matricole: 766917 (VA), 765763 (VA)
+ */
+
+/**
  * Gestisce le prenotazioni: caricamento/salvataggio, creazione, ricerca,
  * visualizzazione, modifica e cancellazione. Supporta operazioni per
  * bigliettai (ricerca e visualizzazione) e clienti. Dati salvati in

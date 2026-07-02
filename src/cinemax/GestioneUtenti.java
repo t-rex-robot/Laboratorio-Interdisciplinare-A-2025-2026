@@ -5,6 +5,14 @@ import java.time.LocalDate;
 import java.util.*;
 
 /**
+ * @author Camilla (Sviluppatore principale)
+ * @author Elisa (Sviluppatore principale)
+ * @author Elisa (Documentazione Javadoc)
+ * @author Leonardo (Revisione e testing)
+ * Matricole: 766743 (VA), 765763 (VA), 765763 (VA), 766745 (VA)
+ */
+
+/**
  * Gestisce il caricamento, l'autenticazione e la registrazione degli utenti.
  * Legge gli utenti da un file CSV e mantiene in memoria una mappa username->Utente.
  *

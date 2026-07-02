@@ -2,6 +2,13 @@ package cinemax;
 import java.time.LocalDate;
 
 /**
+ * @author Camilla (Sviluppatore principale)
+ * @author Elisa (Documentazione Javadoc)
+ * @author Leonardo (Revisione e testing)
+ * Matricole: 766743 (VA), 765763 (VA), 766745 (VA)
+ */
+
+/**
  * Rappresenta un utente, con i dati personali, le credenziali e il ruolo.
  * I dati possono essere caricati e salvati in formato CSV.
  */

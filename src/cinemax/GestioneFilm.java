@@ -5,6 +5,13 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
+ * @author Camilla (Sviluppatore principale)
+ * @author Elisa (Documentazione Javadoc)
+ * @author Leonardo (Revisione e testing)
+ * Matricole: 766743 (VA), 765763 (VA), 766745 (VA)
+ */
+
+/**
  * Gestisce la ricerca e la visualizzazione delle proiezioni disponibili.
  * Fornisce metodi per filtrare le proiezioni per titolo parziale, genere,
  * intervallo di date e costo del biglietto senza richiedere autenticazione.

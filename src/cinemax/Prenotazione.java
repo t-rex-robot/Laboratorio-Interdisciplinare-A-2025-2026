@@ -4,6 +4,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 /**
+ * @author Paolo (Sviluppatore principale)
+ * @author Elisa (Documentazione Javadoc)
+ * Matricole: 766917 (VA), 765763 (VA)
+ */
+
+/**
  * Rappresenta una prenotazione di biglietti per una proiezione.
  * Contiene il codice univoco della prenotazione, l'utente che ha prenotato,
  * il film, la data e l'ora della proiezione, il numero di biglietti e il costo.

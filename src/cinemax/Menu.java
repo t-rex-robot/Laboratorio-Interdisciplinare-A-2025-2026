@@ -5,6 +5,12 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * @author Paolo (Sviluppatore principale)
+ * @author Elisa (Documentazione Javadoc)
+ * Matricole: 766917 (VA), 765763 (VA)
+ */
+
 public class Menu {
 
     // Scanner per leggere input utente
