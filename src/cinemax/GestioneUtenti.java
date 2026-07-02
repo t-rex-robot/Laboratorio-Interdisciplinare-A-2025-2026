@@ -6,10 +6,9 @@ import java.util.*;
 
 /**
  * @author Camilla (Sviluppatore principale)
- * @author Elisa (Sviluppatore principale)
- * @author Elisa (Documentazione Javadoc)
+ * @author Elisa (Sviluppatore principale e Documentazione Javadoc) 
  * @author Leonardo (Revisione e testing)
- * Matricole: 766743 (VA), 765763 (VA), 765763 (VA), 766745 (VA)
+ * Matricole: 766743 (VA), 765763 (VA), 766745 (VA)
  */
 
 /**
