@@ -274,37 +274,6 @@ public class GestioneFilm {
 		}
 	}
 	
-	/**
-	 * Esegue una ricerca con un singolo criterio (titolo, genere, data o costo).
-	 *
-	 * @param tipoRicerca tipo di filtro da applicare (1=titolo, 2=genere, 3=data, 4=costo)
-	 * @param parametri parametri del filtro
-	 * @return elenco delle proiezioni risultanti
-	 */
-	public static LinkedList<Film> trovaFilm(int tipoRicerca, String ...parametri){
-		switch(tipoRicerca) {
-		case 1 -> {
-                    return trovaPerTitolo(parametri[0]);
-                }
-			
-		case 2 -> {
-                    return trovaPerGenere(parametri[0]);
-                }
-			
-		case 3 -> {
-                    return trovaPerDate(Criterio.valueOf(parametri[0]), LocalDate.parse(parametri[1]), LocalDate.parse(parametri[2]));
-                }
-			
-		case 4 -> {
-                    return trovaPerCosto(Criterio.valueOf(parametri[0]), Double.parseDouble(parametri[1]), Double.parseDouble(parametri[2]));
-                }
-			
-		default -> {
-                    System.out.println("Tipo di ricerca non valido!");
-                    return new LinkedList<>();
-                }
-		}
-	}
 	
 	// Trova una singola proiezione precisa
 	// Usato internamente da GestionePrenotazioni
