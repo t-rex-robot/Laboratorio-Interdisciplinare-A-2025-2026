@@ -1,7 +1,7 @@
 package cinemax;
-import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -19,11 +19,7 @@ public class Menu {
     private Utente utenteLoggato = null;
 
     /**
-     * Costruisce il menu principale collegando i moduli di gestione del sistema.
-     *
-     * @param gestioneFilm gestore delle proiezioni
-     * @param gestioneUtenti gestore degli utenti
-     * @param gestionePrenotazioni gestore delle prenotazioni
+     * Costruisce il menu principale dell'applicazione Cinemax.
      */
     public Menu() {
         this.scanner = new Scanner(System.in);
