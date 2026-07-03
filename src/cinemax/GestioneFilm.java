@@ -15,7 +15,7 @@ import java.util.*;
  * Matricole: 766743 (VA), 765763 (VA), 766745 (VA)
  */
 public class GestioneFilm {
-	public enum Criterio{
+	enum Criterio{
 		COMPRESO_TRA, PRIMA_DI, DOPO_DI;
 	}
 	private static final Map<String, Film> mappaFilm = new HashMap<>();
