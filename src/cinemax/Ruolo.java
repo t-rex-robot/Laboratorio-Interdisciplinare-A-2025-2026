@@ -1,13 +1,11 @@
 package cinemax;
 
 /**
+ * Definisce i possibili ruoli di un utente nel sistema.
+ *
  * @author Camilla (Sviluppatore principale)
  * @author Elisa (Documentazione Javadoc)
  * Matricole: 766743 (VA), 765763 (VA)
- */
-
-/**
- * Definisce i possibili ruoli di un utente nel sistema.
  */
 public enum Ruolo {
     /** Utente standard che acquista biglietti. */

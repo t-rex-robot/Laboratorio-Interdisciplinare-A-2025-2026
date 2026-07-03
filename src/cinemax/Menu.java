@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
+ * Implementa il menu testuale dell'applicazione Cinemax.
+ *
  * @author Paolo (Sviluppatore principale)
  * @author Elisa (Documentazione Javadoc)
  * Matricole: 766917 (VA), 765763 (VA)

@@ -5,16 +5,14 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
 /**
- * @author Elisa (Sviluppatore principale e Documentazione Javadoc)
- * Matricole: 765763 (VA)
- */
-
-/**
  * Fornisce funzioni per generare l'hash SHA-256 di una password in chiaro.
  * Converte il testo in una rappresentazione esadecimale sicura tramite
  * un processo di hashing unidirezionale (non invertibile).
  *
  * @see java.security.MessageDigest
+ *
+ * @author Elisa (Sviluppatore principale e Documentazione Javadoc)
+ * Matricole: 765763 (VA)
  */
 public class PasswordHasher {
 

@@ -1,15 +1,11 @@
 package cinemax;
 
 /**
- * Progetto: Cinemax
- * Gruppo: Camilla Pauletto, Elisa Xu, Paolo Andrioli, Leonardo Giuliani
+ * Classe di avvio dell'applicazione Cinemax. Carica i dati delle gestioni da file e avvia il menu principale.
+ *
  * @author Paolo (Sviluppatore principale di questa classe)
  * @author Elisa (Documentazione Javadoc)
  * Matricole: 766917 (VA), 765763 (VA)
- */
-
-/**
- * Classe di avvio dell'applicazione Cinemax. Carica i dati delle gestioni da file e avvia il menu principale.
  */
 public class CineMax {
 

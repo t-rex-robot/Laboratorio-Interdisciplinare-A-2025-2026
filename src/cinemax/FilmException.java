@@ -1,13 +1,11 @@
 package cinemax;
 
 /**
+ * Eccezione specifica per errori relativi alla creazione o gestione delle proiezioni di film.
+ *
  * @author Camilla (Sviluppatore principale)
  * @author Elisa (Documentazione Javadoc)
  * Matricole: 766743 (VA), 765763 (VA)
- */
-
-/**
- * Eccezione specifica per errori relativi alla creazione o gestione delle proiezioni di film.
  */
 public class FilmException extends RuntimeException {
 	

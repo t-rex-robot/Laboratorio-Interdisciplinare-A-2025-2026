@@ -1,13 +1,11 @@
 package cinemax;
 
 /**
+ * Eccezione lanciata quando il formato dei dati caricati dal file non è valido.
+ *
  * @author Camilla (Sviluppatore principale)
  * @author Elisa (Documentazione Javadoc)
  * Matricole: 766743 (VA), 765763 (VA)
- */
-
-/**
- * Eccezione lanciata quando il formato dei dati caricati dal file non è valido.
  */
 public class FormatoDatiNonValidoException extends RuntimeException{
 	
